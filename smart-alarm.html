@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Face Alarm</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/face-api.js/0.22.2/face-api.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --card: #1a1a26;
+    --accent: #ff3c5f;
+    --accent2: #ffb347;
+    --green: #39ff8c;
+    --text: #e8e8f0;
+    --muted: #6b6b88;
+    --border: #2a2a3d;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  /* animated background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 20% 50%, #1a0a2e55, transparent),
+                radial-gradient(ellipse 50% 60% at 80% 50%, #0a1a2e55, transparent);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    width: min(480px, 95vw);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .header {
+    text-align: center;
+  }
+
+  .header h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .header p {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 4px;
+    letter-spacing: 0.05em;
+  }
+
+  .clock-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .time-display {
+    text-align: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 3.5rem;
+    font-weight: 700;
+    letter-spacing: 4px;
+    color: var(--text);
+    text-shadow: 0 0 30px rgba(255,60,95,0.3);
+    transition: color 0.3s;
+  }
+
+  .time-display.ringing {
+    color: var(--accent);
+    animation: pulse-text 0.5s ease-in-out infinite alternate;
+  }
+
+  @keyframes pulse-text {
+    from { text-shadow: 0 0 20px rgba(255,60,95,0.4); }
+    to   { text-shadow: 0 0 50px rgba(255,60,95,0.9); }
+  }
+
+  .alarm-set-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .alarm-set-row label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+  }
+
+  input[type="time"] {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    font-size: 1.1rem;
+    padding: 10px 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  input[type="time"]:focus { border-color: var(--accent); }
+
+  .btn {
+    padding: 12px 22px;
+    border-radius: 10px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.02em;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), #c0293d);
+    color: #fff;
+    flex: 1;
+  }
+  .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  .btn-secondary {
+    background: var(--surface);
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--text); }
+
+  .alarm-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+
+  .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--muted);
+    transition: background 0.3s;
+    flex-shrink: 0;
+  }
+  .dot.active { background: var(--green); box-shadow: 0 0 8px var(--green); animation: blink 1.2s ease-in-out infinite; }
+  .dot.ringing { background: var(--accent); box-shadow: 0 0 12px var(--accent); animation: blink 0.4s ease-in-out infinite; }
+
+  @keyframes blink {
+    0%,100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* Camera Card */
+  .camera-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .camera-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .camera-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+  }
+
+  .face-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    transition: all 0.3s;
+  }
+
+  .face-badge.detected {
+    background: rgba(57,255,140,0.12);
+    border-color: var(--green);
+    color: var(--green);
+  }
+
+  .face-badge.checking {
+    background: rgba(255,179,71,0.12);
+    border-color: var(--accent2);
+    color: var(--accent2);
+  }
+
+  .video-wrap {
+    position: relative;
+    background: #080810;
+    aspect-ratio: 4/3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transform: scaleX(-1);
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
+
+  video.visible { opacity: 1; }
+
+  canvas#overlay {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    transform: scaleX(-1);
+  }
+
+  .camera-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: var(--muted);
+  }
+
+  .camera-icon {
+    font-size: 2.5rem;
+    opacity: 0.4;
+  }
+
+  .camera-placeholder p {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    text-align: center;
+    line-height: 1.6;
+    opacity: 0.5;
+    max-width: 200px;
+  }
+
+  /* Ringing overlay */
+  .ringing-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10,8,15,0.97);
+    gap: 24px;
+  }
+
+  .ringing-overlay.show { display: flex; }
+
+  .ring-pulse {
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,60,95,0.3), transparent 70%);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    animation: ring-pulse 1s ease-out infinite;
+  }
+
+  @keyframes ring-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(255,60,95,0.5); }
+    100% { box-shadow: 0 0 0 60px rgba(255,60,95,0); }
+  }
+
+  .ring-icon { font-size: 4rem; animation: shake 0.4s ease-in-out infinite; }
+
+  @keyframes shake {
+    0%,100% { transform: rotate(-15deg); }
+    50% { transform: rotate(15deg); }
+  }
+
+  .ringing-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: -0.5px;
+  }
+
+  .ringing-sub {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.7;
+  }
+
+  .face-detect-hint {
+    background: rgba(57,255,140,0.08);
+    border: 1px solid rgba(57,255,140,0.3);
+    border-radius: 12px;
+    padding: 14px 22px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--green);
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  .snooze-row {
+    display: flex;
+    gap: 10px;
+  }
+
+  /* Footer info */
+  .info-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .info-chip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+  }
+
+  .info-chip span { font-size: 0.85rem; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>⏰ Face Alarm</h1>
+    <p>ALARM STOPS ONLY WHEN YOUR FACE IS DETECTED</p>
+  </div>
+
+  <!-- Clock + Set Alarm -->
+  <div class="clock-card">
+    <div class="time-display" id="timedisp">00:00:00</div>
+
+    <div class="alarm-set-row">
+      <label>SET ALARM</label>
+      <input type="time" id="alarmTime" value="07:00">
+      <button class="btn btn-primary" id="setBtn" onclick="setAlarm()">SET</button>
+    </div>
+
+    <div style="display:flex; gap:10px;">
+      <button class="btn btn-secondary" id="cancelBtn" onclick="cancelAlarm()" disabled style="flex:1">CANCEL</button>
+    </div>
+
+    <div class="alarm-status">
+      <div class="dot" id="statusDot"></div>
+      <span id="statusText">No alarm set</span>
+    </div>
+  </div>
+
+  <!-- Camera -->
+  <div class="camera-card">
+    <div class="camera-header">
+      <span class="camera-label">📷 Face Detection Camera</span>
+      <span class="face-badge" id="faceBadge">IDLE</span>
+    </div>
+    <div class="video-wrap">
+      <div class="camera-placeholder" id="camPlaceholder">
+        <div class="camera-icon">📷</div>
+        <p>Camera activates when alarm rings.<br>Look at screen to dismiss alarm.</p>
+      </div>
+      <video id="video" autoplay muted playsinline></video>
+      <canvas id="overlay"></canvas>
+    </div>
+  </div>
+
+  <div class="info-row">
+    <div class="info-chip"><span>👁️</span> Opens eyes → alarm stops</div>
+    <div class="info-chip"><span>😴</span> No face → keeps ringing</div>
+  </div>
+</div>
+
+<!-- Ringing Fullscreen Overlay -->
+<div class="ringing-overlay" id="ringingOverlay">
+  <div class="ring-pulse">
+    <div class="ring-icon">🔔</div>
+  </div>
+  <div class="ringing-title">WAKE UP!</div>
+  <div class="ringing-sub" id="ringTime">It's 07:00 AM</div>
+  <div class="face-detect-hint">
+    👁️ Look at the camera with your eyes open<br>to automatically stop the alarm
+  </div>
+  <div class="snooze-row">
+    <button class="btn btn-secondary" onclick="snooze()">😴 Snooze 5min</button>
+    <button class="btn btn-primary" onclick="stopAlarm()">✋ Stop Manually</button>
+  </div>
+</div>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────
+let alarmTime = null;
+let alarmActive = false;
+let isRinging = false;
+let audioCtx = null;
+let alarmNodes = [];
+let cameraStream = null;
+let faceDetectionInterval = null;
+let faceApiLoaded = false;
+let modelLoadAttempted = false;
+let snoozeTimeout = null;
+
+// ── Clock ──────────────────────────────────────────────────────────
+function updateClock() {
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2,'0');
+  const m = String(now.getMinutes()).padStart(2,'0');
+  const s = String(now.getSeconds()).padStart(2,'0');
+  document.getElementById('timedisp').textContent = `${h}:${m}:${s}`;
+  if (alarmActive && !isRinging) checkAlarmTrigger(now);
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ── Alarm Logic ────────────────────────────────────────────────────
+function setAlarm() {
+  const val = document.getElementById('alarmTime').value;
+  if (!val) return;
+  alarmTime = val;
+  alarmActive = true;
+  isRinging = false;
+  document.getElementById('setBtn').disabled = true;
+  document.getElementById('cancelBtn').disabled = false;
+  setStatus('active', `Alarm set for ${formatTime(val)}`);
+}
+
+function cancelAlarm() {
+  alarmTime = null; alarmActive = false; isRinging = false;
+  stopAudio(); stopCamera();
+  document.getElementById('ringingOverlay').classList.remove('show');
+  document.getElementById('setBtn').disabled = false;
+  document.getElementById('cancelBtn').disabled = true;
+  document.getElementById('timedisp').classList.remove('ringing');
+  setStatus('idle', 'No alarm set');
+}
+
+function checkAlarmTrigger(now) {
+  const [ah, am] = alarmTime.split(':').map(Number);
+  if (now.getHours() === ah && now.getMinutes() === am && now.getSeconds() === 0) {
+    triggerAlarm();
+  }
+}
+
+function triggerAlarm() {
+  if (isRinging) return;
+  isRinging = true;
+  document.getElementById('timedisp').classList.add('ringing');
+  document.getElementById('ringingOverlay').classList.add('show');
+  const now = new Date();
+  document.getElementById('ringTime').textContent = `It's ${formatTime12(now)}`;
+  setStatus('ringing', 'ALARM RINGING — Look at camera!');
+  startAudio();
+  startCamera();
+}
+
+function stopAlarm() {
+  isRinging = false; alarmActive = false;
+  stopAudio(); stopCamera();
+  document.getElementById('ringingOverlay').classList.remove('show');
+  document.getElementById('timedisp').classList.remove('ringing');
+  document.getElementById('setBtn').disabled = false;
+  document.getElementById('cancelBtn').disabled = true;
+  setStatus('idle', 'Alarm dismissed ✓');
+}
+
+function snooze() {
+  stopAudio(); stopCamera();
+  document.getElementById('ringingOverlay').classList.remove('show');
+  document.getElementById('timedisp').classList.remove('ringing');
+  isRinging = false;
+  alarmActive = true;
+  setStatus('active', 'Snoozed — rings again in 5 min');
+  snoozeTimeout = setTimeout(() => { if (alarmActive) triggerAlarm(); }, 5 * 60 * 1000);
+}
+
+// ── Audio ──────────────────────────────────────────────────────────
+function startAudio() {
+  try {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    playAlarmLoop();
+  } catch(e) {}
+}
+
+function playAlarmLoop() {
+  if (!isRinging || !audioCtx) return;
+  const pattern = [880, 0, 880, 0, 660, 0];
+  let t = audioCtx.currentTime;
+  pattern.forEach(freq => {
+    if (freq > 0) {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.frequency.value = freq;
+      osc.type = 'square';
+      gain.gain.setValueAtTime(0.12, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
+      osc.start(t); osc.stop(t + 0.18);
+    }
+    t += 0.22;
+  });
+  setTimeout(() => { if (isRinging) playAlarmLoop(); }, pattern.length * 220 + 400);
+}
+
+function stopAudio() {
+  if (audioCtx) { try { audioCtx.close(); } catch(e) {} audioCtx = null; }
+}
+
+// ── Camera + Face Detection ─────────────────────────────────────────
+async function startCamera() {
+  try {
+    cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
+    const video = document.getElementById('video');
+    video.srcObject = cameraStream;
+    video.classList.add('visible');
+    document.getElementById('camPlaceholder').style.display = 'none';
+    setFaceBadge('checking', 'SCANNING...');
+    video.onloadedmetadata = () => {
+      const canvas = document.getElementById('overlay');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      loadFaceApiAndDetect();
+    };
+  } catch(e) {
+    setFaceBadge('', 'NO CAM');
+    console.warn('Camera error:', e);
+  }
+}
+
+async function loadFaceApiAndDetect() {
+  if (!faceApiLoaded && !modelLoadAttempted) {
+    modelLoadAttempted = true;
+    try {
+      await faceapi.nets.tinyFaceDetector.loadFromUri(
+        'https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.13/model/'
+      );
+      faceApiLoaded = true;
+    } catch(e) {
+      console.warn('Face API model load failed, using motion fallback');
+      useFallbackDetection();
+      return;
+    }
+  }
+  if (faceApiLoaded) startFaceDetectionLoop();
+  else useFallbackDetection();
+}
+
+function startFaceDetectionLoop() {
+  const video = document.getElementById('video');
+  const canvas = document.getElementById('overlay');
+  const ctx = canvas.getContext('2d');
+
+  faceDetectionInterval = setInterval(async () => {
+    if (!isRinging) { clearInterval(faceDetectionInterval); return; }
+    try {
+      const detections = await faceapi.detectAllFaces(
+        video, new faceapi.TinyFaceDetectorOptions({ inputSize: 224, scoreThreshold: 0.5 })
+      );
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (detections.length > 0) {
+        setFaceBadge('detected', '✓ FACE DETECTED');
+        // Draw box
+        detections.forEach(d => {
+          const b = d.box;
+          ctx.strokeStyle = '#39ff8c';
+          ctx.lineWidth = 2;
+          ctx.strokeRect(b.x, b.y, b.width, b.height);
+          ctx.fillStyle = 'rgba(57,255,140,0.08)';
+          ctx.fillRect(b.x, b.y, b.width, b.height);
+        });
+        // Face detected → stop alarm!
+        setTimeout(() => { if (isRinging) stopAlarm(); }, 800);
+      } else {
+        setFaceBadge('checking', 'SCANNING...');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    } catch(e) {}
+  }, 600);
+}
+
+// Fallback: pixel brightness change detection (poor man's motion)
+let lastPixelData = null;
+function useFallbackDetection() {
+  const video = document.getElementById('video');
+  const tmpCanvas = document.createElement('canvas');
+  tmpCanvas.width = 64; tmpCanvas.height = 48;
+  const tmpCtx = tmpCanvas.getContext('2d');
+  setFaceBadge('checking', 'DETECTING...');
+
+  faceDetectionInterval = setInterval(() => {
+    if (!isRinging) { clearInterval(faceDetectionInterval); return; }
+    tmpCtx.drawImage(video, 0, 0, 64, 48);
+    const data = tmpCtx.getImageData(0, 0, 64, 48).data;
+    // Calculate average brightness
+    let brightness = 0;
+    for (let i = 0; i < data.length; i += 4) brightness += (data[i] + data[i+1] + data[i+2]) / 3;
+    brightness /= (data.length / 4);
+
+    if (lastPixelData !== null) {
+      let diff = 0;
+      for (let i = 0; i < data.length; i += 4) {
+        diff += Math.abs(data[i] - lastPixelData[i]) + Math.abs(data[i+1] - lastPixelData[i+1]) + Math.abs(data[i+2] - lastPixelData[i+2]);
+      }
+      diff /= (data.length / 4);
+      if (diff > 8 && brightness > 40) {
+        setFaceBadge('detected', '✓ MOTION DETECTED');
+        setTimeout(() => { if (isRinging) stopAlarm(); }, 1000);
+      } else {
+        setFaceBadge('checking', 'SHOW YOUR FACE...');
+      }
+    }
+    lastPixelData = data;
+  }, 700);
+}
+
+function stopCamera() {
+  if (faceDetectionInterval) { clearInterval(faceDetectionInterval); faceDetectionInterval = null; }
+  if (cameraStream) {
+    cameraStream.getTracks().forEach(t => t.stop());
+    cameraStream = null;
+  }
+  const video = document.getElementById('video');
+  video.srcObject = null;
+  video.classList.remove('visible');
+  document.getElementById('camPlaceholder').style.display = '';
+  setFaceBadge('', 'IDLE');
+  const canvas = document.getElementById('overlay');
+  canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+  lastPixelData = null;
+}
+
+// ── UI Helpers ─────────────────────────────────────────────────────
+function setStatus(type, text) {
+  const dot = document.getElementById('statusDot');
+  dot.className = 'dot';
+  if (type === 'active') dot.classList.add('active');
+  if (type === 'ringing') dot.classList.add('ringing');
+  document.getElementById('statusText').textContent = text;
+}
+
+function setFaceBadge(cls, text) {
+  const badge = document.getElementById('faceBadge');
+  badge.className = 'face-badge';
+  if (cls) badge.classList.add(cls);
+  badge.textContent = text;
+}
+
+function formatTime(val) {
+  const [h, m] = val.split(':').map(Number);
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  return `${String(h % 12 || 12).padStart(2,'0')}:${String(m).padStart(2,'0')} ${ampm}`;
+}
+
+function formatTime12(date) {
+  let h = date.getHours(), m = date.getMinutes();
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  return `${String(h % 12 || 12).padStart(2,'0')}:${String(m).padStart(2,'0')} ${ampm}`;
+}
+
+// Test button: for demo - trigger alarm now
+document.addEventListener('keydown', e => { if (e.key === 't' || e.key === 'T') triggerAlarm(); });
+</script>
+
+<!-- Test trigger hint -->
+<div style="position:fixed;bottom:14px;left:50%;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:0.6rem;color:#3a3a55;z-index:200;text-align:center;">
+  Press <kbd style="background:#1a1a26;padding:2px 6px;border-radius:4px;border:1px solid #2a2a3d;color:#6b6b88;">T</kbd> to test alarm trigger
+</div>
+
+</body>
+</html>
