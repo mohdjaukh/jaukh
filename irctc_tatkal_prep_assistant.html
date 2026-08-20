@@ -1,0 +1,363 @@
+
+<style>
+:root {
+  --orange: #E85D04;
+  --orange-light: #FFF3E0;
+  --orange-border: #FF8C00;
+  --green: #2E7D32;
+  --green-light: #E8F5E9;
+  --red: #C62828;
+  --red-light: #FFEBEE;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+.app { max-width: 420px; margin: 0 auto; padding: 12px; }
+.header { background: #E85D04; color: white; border-radius: var(--border-radius-lg); padding: 14px 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 12px; }
+.header-logo { font-size: 28px; }
+.header-text h1 { font-size: 16px; font-weight: 500; }
+.header-text p { font-size: 12px; opacity: 0.85; margin-top: 2px; }
+.timer-box { border: 1.5px solid var(--orange-border); background: var(--orange-light); border-radius: var(--border-radius-lg); padding: 14px 16px; margin-bottom: 14px; }
+.timer-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.timer-label { font-size: 13px; color: var(--color-text-secondary); }
+.timer-type { display: flex; gap: 6px; }
+.t-btn { font-size: 12px; padding: 4px 10px; border-radius: 20px; border: 0.5px solid var(--orange-border); background: white; color: #E85D04; cursor: pointer; font-weight: 500; }
+.t-btn.active { background: #E85D04; color: white; border-color: #E85D04; }
+.countdown { text-align: center; }
+.countdown-time { font-size: 32px; font-weight: 500; color: #E85D04; letter-spacing: 2px; font-variant-numeric: tabular-nums; }
+.countdown-sub { font-size: 12px; color: var(--color-text-secondary); margin-top: 4px; }
+.section { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 14px 16px; margin-bottom: 12px; }
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.section-title { font-size: 13px; font-weight: 500; color: var(--color-text-secondary); display: flex; align-items: center; gap: 6px; }
+.section-title i { font-size: 15px; }
+.copy-all-btn { font-size: 11px; padding: 3px 10px; border-radius: 20px; border: 0.5px solid var(--color-border-secondary); background: transparent; color: var(--color-text-secondary); cursor: pointer; display: flex; align-items: center; gap: 4px; }
+.field-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px; }
+.field-full { grid-column: 1 / -1; }
+.field { display: flex; flex-direction: column; gap: 3px; }
+.field label { font-size: 11px; color: var(--color-text-tertiary); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+.field input, .field select { font-size: 13px; padding: 7px 10px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: var(--color-background-secondary); color: var(--color-text-primary); width: 100%; }
+.field input:focus, .field select:focus { outline: none; border-color: var(--orange-border); }
+.copy-field { display: flex; gap: 4px; }
+.copy-field input { flex: 1; }
+.copy-btn { padding: 0 10px; border-radius: var(--border-radius-md); border: 0.5px solid var(--orange-border); background: var(--orange-light); color: #E85D04; cursor: pointer; font-size: 13px; white-space: nowrap; flex-shrink: 0; }
+.copy-btn:active { background: #E85D04; color: white; }
+.passenger-list { display: flex; flex-direction: column; gap: 8px; }
+.pax-card { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 10px 12px; border: 0.5px solid var(--color-border-tertiary); }
+.pax-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.pax-num { font-size: 12px; font-weight: 500; color: #E85D04; background: var(--orange-light); padding: 2px 8px; border-radius: 10px; }
+.pax-actions { display: flex; gap: 6px; }
+.pax-del { background: none; border: none; color: var(--color-text-tertiary); cursor: pointer; font-size: 14px; padding: 0; }
+.pax-fields { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 6px; }
+.add-pax-btn { width: 100%; padding: 9px; border-radius: var(--border-radius-md); border: 0.5px dashed var(--orange-border); background: transparent; color: #E85D04; cursor: pointer; font-size: 13px; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 8px; }
+.add-pax-btn:hover { background: var(--orange-light); }
+.checklist { display: flex; flex-direction: column; gap: 6px; }
+.check-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-tertiary); cursor: pointer; }
+.check-item.done { background: var(--green-light); border-color: #4CAF50; }
+.check-icon { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--color-border-secondary); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 11px; }
+.check-item.done .check-icon { background: #2E7D32; border-color: #2E7D32; color: white; }
+.check-text { font-size: 13px; color: var(--color-text-primary); }
+.check-item.done .check-text { color: #2E7D32; }
+.steps-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px; }
+.step-card { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 10px; border: 0.5px solid var(--color-border-tertiary); text-align: center; }
+.step-num { font-size: 18px; font-weight: 500; color: #E85D04; }
+.step-desc { font-size: 11px; color: var(--color-text-secondary); margin-top: 3px; line-height: 1.4; }
+.open-irctc { width: 100%; padding: 13px; border-radius: var(--border-radius-lg); background: #E85D04; color: white; border: none; font-size: 15px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 12px; }
+.open-irctc:active { opacity: 0.9; }
+.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #2E7D32; color: white; padding: 8px 20px; border-radius: 20px; font-size: 13px; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 999; }
+.toast.show { opacity: 1; }
+.status-bar { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--color-text-secondary); margin-bottom: 10px; padding: 8px 12px; background: var(--color-background-secondary); border-radius: var(--border-radius-md); }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background: #4CAF50; flex-shrink: 0; animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+.tab-bar { display: flex; border-radius: var(--border-radius-md); background: var(--color-background-secondary); padding: 3px; gap: 3px; margin-bottom: 14px; }
+.tab { flex: 1; padding: 7px; text-align: center; font-size: 12px; border-radius: 6px; cursor: pointer; color: var(--color-text-secondary); border: none; background: none; font-weight: 500; }
+.tab.active { background: var(--color-background-primary); color: #E85D04; border: 0.5px solid var(--color-border-tertiary); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+</style>
+<h2 class="sr-only">IRCTC Tatkal Ticket Prep Assistant — Apni details save karo aur booking ke time copy karo</h2>
+<div class="app">
+  <div class="header">
+    <div class="header-logo">🚂</div>
+    <div class="header-text">
+      <h1>IRCTC Tatkal Assistant</h1>
+      <p>Details ready rakho — seconds mein book karo</p>
+    </div>
+  </div>
+  <div class="status-bar">
+    <div class="status-dot"></div>
+    <span id="current-time-label">Current time: --:--:-- IST</span>
+  </div>
+  <div class="timer-box">
+    <div class="timer-row">
+      <span class="timer-label">⏱ Tatkal opens in:</span>
+      <div class="timer-type">
+        <button class="t-btn active" onclick="setTatkalType('ac')">AC (10:00)</button>
+        <button class="t-btn" onclick="setTatkalType('sl')">SL (11:00)</button>
+      </div>
+    </div>
+    <div class="countdown">
+      <div class="countdown-time" id="countdown">--:--:--</div>
+      <div class="countdown-sub" id="countdown-sub">Select class and check timer</div>
+    </div>
+  </div>
+  <div class="tab-bar">
+    <button class="tab active" onclick="showTab('journey')"><i class="ti ti-train" aria-hidden="true"></i> Journey</button>
+    <button class="tab" onclick="showTab('passengers')"><i class="ti ti-users" aria-hidden="true"></i> Passengers</button>
+    <button class="tab" onclick="showTab('checklist')"><i class="ti ti-checklist" aria-hidden="true"></i> Checklist</button>
+    <button class="tab" onclick="showTab('steps')"><i class="ti ti-list-numbers" aria-hidden="true"></i> Steps</button>
+  </div>
+  <div id="tab-journey" class="tab-content active">
+    <div class="section">
+      <div class="section-header">
+        <span class="section-title"><i class="ti ti-route" aria-hidden="true"></i> Journey Details</span>
+        <button class="copy-all-btn" onclick="copyAllJourney()"><i class="ti ti-copy" aria-hidden="true"></i> Copy All</button>
+      </div>
+      <div class="field-grid">
+        <div class="field field-full">
+          <label>From Station</label>
+          <div class="copy-field">
+            <input type="text" id="from-station" placeholder="e.g. ADI - Ahmedabad" />
+            <button class="copy-btn" onclick="copyField('from-station')">Copy</button>
+          </div>
+        </div>
+        <div class="field field-full">
+          <label>To Station</label>
+          <div class="copy-field">
+            <input type="text" id="to-station" placeholder="e.g. NDLS - New Delhi" />
+            <button class="copy-btn" onclick="copyField('to-station')">Copy</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>Travel Date</label>
+          <div class="copy-field">
+            <input type="date" id="travel-date" />
+            <button class="copy-btn" onclick="copyField('travel-date')">Copy</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>Train Number</label>
+          <div class="copy-field">
+            <input type="text" id="train-no" placeholder="e.g. 12001" />
+            <button class="copy-btn" onclick="copyField('train-no')">Copy</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>Class</label>
+          <select id="class-select">
+            <option>SL - Sleeper</option>
+            <option>3A - AC 3 Tier</option>
+            <option>2A - AC 2 Tier</option>
+            <option>1A - AC First</option>
+            <option>CC - Chair Car</option>
+            <option>EC - Exec. Chair</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Quota</label>
+          <select id="quota-select">
+            <option>TQ - Tatkal</option>
+            <option>PT - Premium Tatkal</option>
+            <option>GN - General</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">
+        <span class="section-title"><i class="ti ti-credit-card" aria-hidden="true"></i> Payment Info</span>
+      </div>
+      <div class="field-grid">
+        <div class="field field-full">
+          <label>UPI ID / Payment Method</label>
+          <div class="copy-field">
+            <input type="text" id="upi-id" placeholder="yourname@paytm / BHIM" />
+            <button class="copy-btn" onclick="copyField('upi-id')">Copy</button>
+          </div>
+        </div>
+        <div class="field field-full">
+          <label>IRCTC Username</label>
+          <div class="copy-field">
+            <input type="text" id="irctc-user" placeholder="Your IRCTC User ID" />
+            <button class="copy-btn" onclick="copyField('irctc-user')">Copy</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="tab-passengers" class="tab-content">
+    <div class="section">
+      <div class="section-header">
+        <span class="section-title"><i class="ti ti-users" aria-hidden="true"></i> Passenger Details</span>
+        <button class="copy-all-btn" onclick="copyAllPassengers()"><i class="ti ti-copy" aria-hidden="true"></i> Copy All</button>
+      </div>
+      <div class="passenger-list" id="passenger-list"></div>
+      <button class="add-pax-btn" onclick="addPassenger()"><i class="ti ti-plus" aria-hidden="true"></i> Passenger Add Karo</button>
+    </div>
+  </div>
+  <div id="tab-checklist" class="tab-content">
+    <div class="section">
+      <div class="section-header">
+        <span class="section-title"><i class="ti ti-checklist" aria-hidden="true"></i> Booking se Pehle</span>
+        <button class="copy-all-btn" onclick="resetChecklist()"><i class="ti ti-refresh" aria-hidden="true"></i> Reset</button>
+      </div>
+      <div class="checklist" id="checklist-items"></div>
+    </div>
+  </div>
+  <div id="tab-steps" class="tab-content">
+    <div class="section">
+      <div class="section-header">
+        <span class="section-title"><i class="ti ti-list-numbers" aria-hidden="true"></i> Booking Steps</span>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card"><div class="step-num">①</div><div class="step-desc">9:55 AM / 10:55 AM par IRCTC open karo</div></div>
+        <div class="step-card"><div class="step-num">②</div><div class="step-desc">Login complete karo, session active raho</div></div>
+        <div class="step-card"><div class="step-num">③</div><div class="step-desc">Train search karke ready rakho (book mat karo)</div></div>
+        <div class="step-card"><div class="step-num">④</div><div class="step-desc">Exact time par "Book Now" click karo</div></div>
+        <div class="step-card"><div class="step-num">⑤</div><div class="step-desc">Passenger details yahan se copy karke paste karo</div></div>
+        <div class="step-card"><div class="step-num">⑥</div><div class="step-desc">Payment immediately karo — UPI fast hai</div></div>
+      </div>
+      <div style="margin-top: 12px; padding: 10px 12px; background: var(--orange-light); border-radius: var(--border-radius-md); border-left: 3px solid #E85D04;">
+        <p style="font-size: 12px; color: #E85D04; font-weight: 500;">💡 Pro Tip</p>
+        <p style="font-size: 12px; color: var(--color-text-secondary); margin-top: 4px;">IRCTC pe jao, search result tak pahuncho, aur exactly 10:00:00 baje (AC ke liye) refresh karo. Speed hi sab kuch hai!</p>
+      </div>
+    </div>
+  </div>
+  <button class="open-irctc" onclick="openIRCTC()"><i class="ti ti-external-link" aria-hidden="true"></i> IRCTC Website Kholo</button>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+var tatkalType = 'ac';
+var passengers = [];
+var checklistState = {};
+var checklistItems = [
+  'IRCTC login credentials ready hain',
+  'Passenger ID proof paas hai (Aadhaar/PAN)',
+  'UPI app / net banking ready hai',
+  'Train number aur station codes confirm kiye',
+  'Travel date double-check ki',
+  'Mobile charged hai (>50%)',
+  'Browser ke dusre tabs band karo',
+  'Slow internet nahi — WiFi ya 4G strong ho'
+];
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2000);
+}
+function copyToClipboard(text) {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(function(){ showToast('✓ Copied!'); });
+  } else {
+    var el = document.createElement('textarea');
+    el.value = text;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    showToast('✓ Copied!');
+  }
+}
+function copyField(id) {
+  var el = document.getElementById(id);
+  if (el && el.value) copyToClipboard(el.value);
+  else showToast('Pehle value bharo!');
+}
+function copyAllJourney() {
+  var fields = ['from-station','to-station','travel-date','train-no'];
+  var texts = fields.map(function(id){
+    var el = document.getElementById(id);
+    return el ? el.value : '';
+  }).filter(Boolean);
+  var cls = document.getElementById('class-select').value;
+  var quota = document.getElementById('quota-select').value;
+  texts.push(cls, quota);
+  if (texts.length < 3) { showToast('Pehle details bharo!'); return; }
+  copyToClipboard(texts.join(' | '));
+}
+function copyAllPassengers() {
+  if (passengers.length === 0) { showToast('Passenger add karo pehle!'); return; }
+  var text = passengers.map(function(p, i){
+    return 'P' + (i+1) + ': ' + p.name + ' | Age: ' + p.age + ' | ' + p.gender + ' | ID: ' + p.idtype + ' ' + p.idno;
+  }).join('\n');
+  copyToClipboard(text);
+}
+function setTatkalType(type) {
+  tatkalType = type;
+  document.querySelectorAll('.t-btn').forEach(function(b){ b.classList.remove('active'); });
+  event.target.classList.add('active');
+}
+function updateClock() {
+  var now = new Date();
+  var ist = new Date(now.getTime() + (330 + now.getTimezoneOffset()) * 60000);
+  var h = ist.getHours(), m = ist.getMinutes(), s = ist.getSeconds();
+  var timeStr = pad(h) + ':' + pad(m) + ':' + pad(s) + ' IST';
+  document.getElementById('current-time-label').textContent = 'Current time: ' + timeStr;
+  var targetH = tatkalType === 'ac' ? 10 : 11;
+  var target = new Date(ist);
+  target.setHours(targetH, 0, 0, 0);
+  if (ist >= target) target.setDate(target.getDate() + 1);
+  var diff = Math.floor((target - ist) / 1000);
+  var dh = Math.floor(diff / 3600);
+  var dm = Math.floor((diff % 3600) / 60);
+  var ds = diff % 60;
+  var cd = document.getElementById('countdown');
+  var cs = document.getElementById('countdown-sub');
+  cd.textContent = pad(dh) + ':' + pad(dm) + ':' + pad(ds);
+  if (diff < 60) { cd.style.color = '#C62828'; cs.textContent = '🔴 Ab booking shuru karo!'; }
+  else if (diff < 300) { cd.style.color = '#E85D04'; cs.textContent = '⚡ 5 minute se kam! Ready raho!'; }
+  else { cd.style.color = '#E85D04'; cs.textContent = tatkalType === 'ac' ? 'AC Tatkal opens at 10:00 AM IST' : 'Sleeper Tatkal opens at 11:00 AM IST'; }
+}
+function pad(n){ return n < 10 ? '0' + n : '' + n; }
+function showTab(name) {
+  document.querySelectorAll('.tab-content').forEach(function(t){ t.classList.remove('active'); });
+  document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+function addPassenger() {
+  var id = Date.now();
+  passengers.push({ id: id, name: '', age: '', gender: 'Male', idtype: 'Aadhaar', idno: '', berth: 'No Preference' });
+  renderPassengers();
+}
+function removePassenger(id) {
+  passengers = passengers.filter(function(p){ return p.id !== id; });
+  renderPassengers();
+}
+function updatePassenger(id, field, value) {
+  passengers.forEach(function(p){ if (p.id === id) p[field] = value; });
+}
+function renderPassengers() {
+  var list = document.getElementById('passenger-list');
+  if (passengers.length === 0) {
+    list.innerHTML = '<p style="font-size:13px;color:var(--color-text-tertiary);text-align:center;padding:12px 0;">Koi passenger nahi — add karo!</p>';
+    return;
+  }
+  list.innerHTML = passengers.map(function(p, i) {
+    return '<div class="pax-card"><div class="pax-header"><span class="pax-num">P' + (i+1) + '</span><button class="pax-del" onclick="removePassenger(' + p.id + ')"><i class="ti ti-trash" aria-hidden="true"></i></button></div><div class="pax-fields"><div class="field field-full"><label>Full Name</label><div class="copy-field"><input type="text" placeholder="As per ID proof" value="' + escHtml(p.name) + '" oninput="updatePassenger(' + p.id + ',\'name\',this.value)" /><button class="copy-btn" onclick="copyToClipboard(passengers.find(function(x){return x.id===' + p.id + '}).name||\'\')" >Copy</button></div></div><div class="field"><label>Age</label><input type="number" placeholder="Age" value="' + escHtml(p.age) + '" min="1" max="120" oninput="updatePassenger(' + p.id + ',\'age\',this.value)" /></div><div class="field"><label>Gender</label><select onchange="updatePassenger(' + p.id + ',\'gender\',this.value)"><option' + (p.gender==='Male'?' selected':'') + '>Male</option><option' + (p.gender==='Female'?' selected':'') + '>Female</option><option' + (p.gender==='Transgender'?' selected':'') + '>Transgender</option></select></div><div class="field"><label>ID Type</label><select onchange="updatePassenger(' + p.id + ',\'idtype\',this.value)"><option' + (p.idtype==='Aadhaar'?' selected':'') + '>Aadhaar</option><option' + (p.idtype==='PAN'?' selected':'') + '>PAN</option><option' + (p.idtype==='Voter ID'?' selected':'') + '>Voter ID</option><option' + (p.idtype==='Passport'?' selected':'') + '>Passport</option></select></div><div class="field field-full"><label>ID Number</label><div class="copy-field"><input type="text" placeholder="ID card number" value="' + escHtml(p.idno) + '" oninput="updatePassenger(' + p.id + ',\'idno\',this.value)" /><button class="copy-btn" onclick="copyToClipboard(passengers.find(function(x){return x.id===' + p.id + '}).idno||\'\')" >Copy</button></div></div><div class="field field-full"><label>Berth Preference</label><select onchange="updatePassenger(' + p.id + ',\'berth\',this.value)"><option>No Preference</option><option>Lower</option><option>Middle</option><option>Upper</option><option>Side Lower</option><option>Side Upper</option></select></div></div></div>';
+  }).join('');
+}
+function escHtml(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;'); }
+function renderChecklist() {
+  var list = document.getElementById('checklist-items');
+  list.innerHTML = checklistItems.map(function(item, i) {
+    var done = checklistState[i] || false;
+    return '<div class="check-item' + (done?' done':'') + '" onclick="toggleCheck(' + i + ')"><div class="check-icon">' + (done ? '✓' : '') + '</div><span class="check-text">' + item + '</span></div>';
+  }).join('');
+}
+function toggleCheck(i) {
+  checklistState[i] = !checklistState[i];
+  renderChecklist();
+}
+function resetChecklist() {
+  checklistState = {};
+  renderChecklist();
+  showToast('Checklist reset ho gayi!');
+}
+function openIRCTC() {
+  window.open('https://www.irctc.co.in/nget/train-search', '_blank');
+}
+renderPassengers();
+renderChecklist();
+setInterval(updateClock, 1000);
+updateClock();
+</script>

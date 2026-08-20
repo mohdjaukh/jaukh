@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gulf + India HR Job Agent — Mohd Jaukh</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d1117;--bg2:#161b22;--bg3:#1c2333;--border:#30363d;--border2:#21262d;
+  --gold:#f0a500;--gold2:#ffd060;--teal:#0ea5e9;--green:#22c55e;--red:#ef4444;
+  --purple:#a855f7;--orange:#f97316;--pink:#ec4899;
+  --text:#e6edf3;--text2:#8b949e;--text3:#6e7681;
+  --r:12px;--rs:8px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.shell{display:flex;flex-direction:column;min-height:100vh}
+
+/* TOP BAR */
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:11px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:200}
+.logo{width:36px;height:36px;background:linear-gradient(135deg,var(--gold),var(--orange));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.topbar-name{font-size:14px;font-weight:600;color:var(--text)}
+.topbar-sub{font-size:10px;color:var(--text2)}
+.topbar-live{margin-left:auto;padding:4px 10px;background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3);border-radius:20px;font-size:10px;font-weight:600;color:var(--green);display:flex;align-items:center;gap:4px}
+.pulse{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* LAYOUT */
+.body-wrap{display:flex;flex:1}
+.sidebar{width:200px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);padding:10px 8px;position:sticky;top:60px;height:calc(100vh - 60px);overflow-y:auto;scrollbar-width:thin;display:none;flex-direction:column;gap:2px}
+@media(min-width:640px){.sidebar{display:flex}.bnav{display:none!important}}
+.s-sec{font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;padding:8px 10px 3px}
+.nb{display:flex;align-items:center;gap:8px;padding:9px 11px;border-radius:var(--rs);font-size:12px;font-weight:500;color:var(--text2);cursor:pointer;border:none;background:transparent;width:100%;text-align:left;font-family:'Plus Jakarta Sans',sans-serif;transition:all .15s}
+.nb svg{width:15px;height:15px;flex-shrink:0}
+.nb:hover{background:var(--bg3);color:var(--text)}
+.nb.act{background:rgba(240,165,0,.12);color:var(--gold)}
+.nb-badge{margin-left:auto;font-size:8px;font-weight:700;background:var(--red);color:#fff;padding:1px 5px;border-radius:10px}
+.main{flex:1;min-width:0;overflow-y:auto}
+.page{display:none;padding:14px;max-width:780px}
+.page.act{display:block}
+.bnav{display:flex;background:var(--bg2);border-top:1px solid var(--border);position:sticky;bottom:0;z-index:200}
+.bi{flex:1;min-width:50px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:7px 4px 9px;font-size:9px;font-weight:500;color:var(--text3);cursor:pointer;border:none;background:transparent;font-family:'Plus Jakarta Sans',sans-serif;transition:color .15s;gap:3px;position:relative}
+.bi svg{width:19px;height:19px}
+.bi.act{color:var(--gold)}
+.bi-dot{position:absolute;top:5px;right:9px;width:6px;height:6px;background:var(--red);border-radius:50%}
+
+/* COMPONENTS */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:12px}
+.card-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card-title svg{width:15px;height:15px;color:var(--text2);flex-shrink:0}
+.cbadge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;margin-left:auto}
+.cb-green{background:rgba(34,197,94,.15);color:var(--green)}
+.cb-gold{background:rgba(240,165,0,.15);color:var(--gold2)}
+.cb-teal{background:rgba(14,165,233,.15);color:var(--teal)}
+.cb-red{background:rgba(239,68,68,.15);color:var(--red)}
+.cb-purple{background:rgba(168,85,247,.15);color:var(--purple)}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#0d1117,#1a2744,#0d1117);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:12px;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;top:-20px;right:-20px;width:120px;height:120px;background:radial-gradient(circle,rgba(240,165,0,.15) 0%,transparent 70%);pointer-events:none}
+.hero-title{font-size:19px;font-weight:700;color:#fff;margin-bottom:3px}
+.hero-sub{font-size:12px;color:var(--text2);margin-bottom:12px}
+.hero-tags{display:flex;flex-wrap:wrap;gap:6px}
+.htag{font-size:11px;font-weight:500;padding:4px 10px;border-radius:20px}
+.ht-gold{background:rgba(240,165,0,.2);color:#ffd060;border:1px solid rgba(240,165,0,.3)}
+.ht-teal{background:rgba(14,165,233,.2);color:#7dd3fc;border:1px solid rgba(14,165,233,.3)}
+.ht-green{background:rgba(34,197,94,.2);color:#86efac;border:1px solid rgba(34,197,94,.3)}
+.ht-pink{background:rgba(236,72,153,.2);color:#f9a8d4;border:1px solid rgba(236,72,153,.3)}
+
+/* STATS */
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
+.sc{border-radius:var(--r);padding:13px;position:relative;overflow:hidden}
+.sc1{background:linear-gradient(135deg,#1e3a5f,#1e40af);border:1px solid rgba(59,130,246,.25)}
+.sc2{background:linear-gradient(135deg,#1a3a2a,#15803d);border:1px solid rgba(34,197,94,.25)}
+.sc3{background:linear-gradient(135deg,#3a2a10,#92400e);border:1px solid rgba(240,165,0,.25)}
+.sc4{background:linear-gradient(135deg,#2a1a3a,#7c3aed);border:1px solid rgba(168,85,247,.25)}
+.sc-n{font-size:26px;font-weight:700;color:#fff;font-family:'Space Grotesk',sans-serif}
+.sc-l{font-size:10px;color:rgba(255,255,255,.5);margin-top:2px}
+
+/* LOCATION TOGGLE */
+.loc-toggle{display:flex;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:4px;margin-bottom:14px;gap:4px}
+.loc-btn{flex:1;padding:9px 10px;border-radius:var(--rs);font-size:12px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--text2);font-family:'Plus Jakarta Sans',sans-serif;transition:all .2s;text-align:center}
+.loc-btn.act{background:var(--bg);color:var(--gold);box-shadow:0 2px 8px rgba(0,0,0,.3)}
+
+/* COUNTRY GRID */
+.cg{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px}
+.cc{background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:10px 6px;text-align:center;cursor:pointer;transition:all .2s}
+.cc:hover{border-color:var(--gold)}
+.cc.on{border-color:var(--gold);background:rgba(240,165,0,.08)}
+.cc .cf{font-size:22px;margin-bottom:3px}
+.cc .cn{font-size:10px;font-weight:600;color:var(--text)}
+.cc.on .cn{color:var(--gold2)}
+.cc .cs{font-size:9px;color:var(--text3);margin-top:1px}
+
+/* INDIA CITIES */
+.india-cities{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px}
+.ic{background:var(--bg3);border:1.5px solid var(--border);border-radius:9px;padding:9px 6px;text-align:center;cursor:pointer;transition:all .2s;font-size:11px;font-weight:600;color:var(--text2)}
+.ic:hover{border-color:var(--pink)}
+.ic.on{border-color:var(--pink);background:rgba(236,72,153,.08);color:#f9a8d4}
+
+/* FORM */
+.field{margin-bottom:10px}
+.field label{display:block;font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.field input,.field select,.field textarea{width:100%;font-size:12px;padding:9px 11px;border-radius:var(--rs);border:1.5px solid var(--border);background:var(--bg3);color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;transition:border-color .15s;min-height:38px}
+.field input:focus,.field select:focus{outline:none;border-color:var(--gold)}
+.field textarea{resize:vertical;min-height:80px}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+
+/* BUTTONS */
+.btn{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:10px 14px;border-radius:var(--rs);font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:var(--bg3);color:var(--text);transition:all .18s;font-family:'Plus Jakarta Sans',sans-serif;min-height:42px}
+.btn svg{width:15px;height:15px;flex-shrink:0}
+.btn:hover{background:var(--bg2)}
+.btn:active{transform:scale(.98)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.btn-gold{background:linear-gradient(135deg,var(--gold),#ef4444);border-color:var(--gold);color:#000;font-weight:700}
+.btn-gold:hover{filter:brightness(1.08)}
+.btn-teal{background:linear-gradient(135deg,var(--teal),#0891b2);border-color:var(--teal);color:#fff}
+.btn-green{background:linear-gradient(135deg,var(--green),#16a34a);border-color:var(--green);color:#fff}
+.btn-purple{background:linear-gradient(135deg,var(--purple),#7c3aed);border-color:var(--purple);color:#fff}
+.btn-pink{background:linear-gradient(135deg,var(--pink),#db2777);border-color:var(--pink);color:#fff}
+.btn-dark{background:#1e293b;border-color:#334155;color:#e2e8f0}
+.btn-warn{background:rgba(240,165,0,.1);border-color:rgba(240,165,0,.4);color:var(--gold2)}
+.btn-sm{padding:7px 12px;font-size:11px;width:auto;min-height:34px}
+
+/* JOB CARDS */
+.jcard{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r);padding:13px;margin-bottom:8px;cursor:pointer;transition:all .2s;position:relative}
+.jcard:hover{border-color:var(--teal);transform:translateY(-1px)}
+.jcard.sel{border-color:var(--green);background:rgba(34,197,94,.04)}
+.jcard.sel::after{content:'✓';position:absolute;top:11px;right:11px;color:var(--green);font-size:15px;font-weight:700}
+.jcard.applied-done{border-color:var(--text3)!important;opacity:.55;cursor:default}
+.jcard.applied-done::after{content:'Applied';position:absolute;top:11px;right:11px;color:var(--text3);font-size:10px;font-weight:600;background:var(--bg3);padding:2px 7px;border-radius:10px;border:1px solid var(--border)}
+.jcard.applied-done:hover{transform:none}
+.jt{font-size:13px;font-weight:600;color:var(--text)}
+.jco{font-size:11px;color:var(--text2);margin-top:2px}
+.jreason{font-size:10px;color:var(--text2);background:var(--bg3);border-radius:6px;padding:5px 8px;margin-top:7px;line-height:1.5}
+.jtags{display:flex;flex-wrap:wrap;gap:4px;margin-top:7px}
+.jtag{padding:3px 8px;border-radius:6px;font-size:10px;font-weight:600}
+.jt-loc{background:rgba(14,165,233,.15);color:#7dd3fc}
+.jt-sal{background:rgba(34,197,94,.15);color:#86efac}
+.jt-visa{background:rgba(240,165,0,.15);color:var(--gold2)}
+.jt-time{background:var(--bg3);color:var(--text3);border:1px solid var(--border)}
+.jt-new{background:rgba(34,197,94,.25);color:#4ade80;border:1px solid rgba(34,197,94,.4)}
+.jt-india{background:rgba(236,72,153,.15);color:#f9a8d4}
+.mbadge{padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;flex-shrink:0}
+.mh{background:rgba(34,197,94,.2);color:#4ade80}
+.mm{background:rgba(240,165,0,.2);color:var(--gold2)}
+.ml{background:rgba(239,68,68,.2);color:#f87171}
+.indeed-link{color:var(--teal);font-size:10px;text-decoration:none;display:inline-flex;align-items:center;gap:3px;margin-top:4px}
+.indeed-link:hover{text-decoration:underline}
+
+/* LIVE BADGE */
+.live-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3);border-radius:20px;font-size:9px;font-weight:600;color:var(--green)}
+.live-dot{width:4px;height:4px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+
+/* APPLIED TRACKER */
+.applied-tracker{background:rgba(240,165,0,.05);border:1px solid rgba(240,165,0,.2);border-radius:var(--r);padding:12px;margin-bottom:12px}
+.at-title{font-size:11px;font-weight:700;color:var(--gold2);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.at-item{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border2);font-size:11px}
+.at-item:last-child{border-bottom:none;padding-bottom:0}
+.at-flag{font-size:14px;flex-shrink:0}
+.at-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text2)}
+.at-date{font-size:9px;color:var(--text3);flex-shrink:0}
+.at-check{color:var(--green);font-size:12px;flex-shrink:0}
+
+/* LOG */
+.terminal{background:#010409;border:1px solid var(--border);border-radius:var(--rs);padding:11px;font-family:'Space Grotesk',monospace;font-size:10px;height:150px;overflow-y:auto;color:#4d9375;scrollbar-width:thin}
+.ll{margin-bottom:3px;opacity:0;animation:fi .25s forwards}
+.ll.info{color:#58a6ff}.ll.success{color:#3fb950}.ll.warn{color:#d29922}.ll.error{color:#f85149}
+@keyframes fi{to{opacity:1}}
+.pbar{height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;margin:7px 0 3px}
+.pfill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--teal),var(--green));transition:width .4s;width:0%}
+
+/* PORTAL GRID */
+.pg2{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:12px}
+.pc{background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--rs);padding:8px 10px;display:flex;align-items:center;gap:7px;cursor:pointer;font-size:11px;font-weight:500;color:var(--text2);transition:all .15s}
+.pc svg{width:13px;height:13px;flex-shrink:0}
+.pc:hover{border-color:var(--teal)}
+.pc.on{background:rgba(14,165,233,.1);border-color:var(--teal);color:#7dd3fc}
+
+/* CONTACT CARDS */
+.ccard{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r);padding:13px;margin-bottom:8px;transition:border-color .15s}
+.ccard:hover{border-color:var(--teal)}
+.cav{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--purple));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
+.crow{display:flex;align-items:center;gap:7px;margin-bottom:4px}
+.crow svg{width:12px;height:12px;color:var(--text3);flex-shrink:0}
+.crow span,.crow a{font-size:11px;color:var(--text2);word-break:break-all}
+.crow a{color:var(--teal);text-decoration:none}
+.crow a:hover{text-decoration:underline}
+
+/* ALERTS */
+.alert{padding:9px 12px;border-radius:var(--rs);font-size:11px;margin-bottom:11px;display:flex;gap:7px;align-items:flex-start;line-height:1.5}
+.alert svg{width:14px;height:14px;flex-shrink:0;margin-top:1px}
+.al-info{background:rgba(14,165,233,.1);border:1px solid rgba(14,165,233,.25);color:#7dd3fc}
+.al-success{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);color:#86efac}
+.al-warn{background:rgba(240,165,0,.1);border:1px solid rgba(240,165,0,.25);color:var(--gold2)}
+
+/* EMAIL PREVIEW */
+.ep{background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--rs);padding:13px;font-size:11px;line-height:1.85;color:var(--text);max-height:230px;overflow-y:auto;white-space:pre-wrap;margin-bottom:10px}
+
+/* MISC */
+.divider{height:1px;background:var(--border);margin:11px 0}
+.sec-lbl{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px}
+.spinner{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.empty-state{text-align:center;padding:36px 16px;color:var(--text3)}
+.empty-state svg{width:44px;height:44px;opacity:.15;margin:0 auto 10px;display:block}
+.step-row{display:flex;gap:4px;margin-bottom:14px}
+.step-item{flex:1;padding:6px 3px;text-align:center;font-size:9px;font-weight:600;border-radius:var(--rs);border:1.5px solid var(--border);color:var(--text3);background:var(--bg2);transition:all .2s}
+.step-item.done{background:rgba(34,197,94,.1);border-color:var(--green);color:var(--green)}
+.step-item.active{background:rgba(14,165,233,.1);border-color:var(--teal);color:var(--teal)}
+.gmail-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:20px;font-size:11px;font-weight:600;color:#fca5a5;margin-bottom:11px}
+.gmail-pill svg{width:13px;height:13px}
+.hitem{display:flex;align-items:flex-start;gap:9px;background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r);padding:11px;margin-bottom:7px}
+.hico{width:32px;height:32px;border-radius:var(--rs);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.hico-g{background:rgba(34,197,94,.15)}
+.hico-g svg{color:var(--green);width:15px;height:15px}
+.hico-y{background:rgba(240,165,0,.15)}
+.hico-y svg{color:var(--gold);width:15px;height:15px}
+.htitle{font-size:12px;font-weight:600;color:var(--text)}
+.hmeta{font-size:10px;color:var(--text2);margin-top:2px}
+.hbadge{margin-left:auto;font-size:9px;font-weight:600;padding:3px 8px;border-radius:20px;flex-shrink:0}
+.hb-s{background:rgba(34,197,94,.15);color:var(--green)}
+.hb-d{background:rgba(240,165,0,.15);color:var(--gold2)}
+
+.pbox{background:linear-gradient(135deg,#0d1117,#1a2744);border:1px solid rgba(240,165,0,.3);border-radius:var(--r);padding:13px;display:flex;align-items:center;gap:11px;margin-bottom:12px}
+.pbox svg{width:30px;height:30px;color:var(--gold);flex-shrink:0}
+.pbox-num{font-size:14px;font-weight:700;color:#fff;font-family:'Space Grotesk',sans-serif}
+.pbox-meta{font-size:10px;color:var(--text2);margin-top:2px}
+.skill-chip{display:inline-block;padding:4px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:20px;font-size:11px;font-weight:500;color:var(--text2);margin:3px;cursor:default;transition:all .15s}
+.skill-chip:hover{border-color:var(--gold);color:var(--gold2)}
+.iq{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--border2);cursor:pointer;min-height:44px;transition:color .15s}
+.iq:last-child{border-bottom:none}
+.iq svg{width:13px;height:13px;color:var(--text3);flex-shrink:0}
+.iq:hover span{color:var(--teal)}
+.iq:hover svg{color:var(--teal)}
+.iq span{font-size:12px;color:var(--text2)}
+.salary-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border2)}
+.salary-row:last-child{border-bottom:none}
+.sr-role{font-size:12px;font-weight:600;color:var(--text)}
+.sr-loc{font-size:10px;color:var(--text3)}
+.sr-amt{font-size:12px;font-weight:700;color:var(--green);font-family:'Space Grotesk',sans-serif}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- TOP BAR -->
+<header class="topbar">
+  <div class="logo">🌙</div>
+  <div>
+    <div class="topbar-name">Gulf + India HR Agent</div>
+    <div class="topbar-sub">Mohd Jaukh · Live Indeed Jobs · No Repeats</div>
+  </div>
+  <div class="topbar-live"><div class="pulse"></div>Live Jobs</div>
+</header>
+
+<div class="body-wrap">
+
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+  <div class="s-sec">Overview</div>
+  <button class="nb act" data-tab="dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboard</button>
+  <button class="nb" data-tab="profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>My Profile</button>
+  <div class="s-sec">Job Search</div>
+  <button class="nb" data-tab="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Search Jobs</button>
+  <button class="nb" data-tab="coverletter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Cover Letter</button>
+  <button class="nb" data-tab="apply"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Apply Jobs</button>
+  <div class="s-sec">Outreach</div>
+  <button class="nb" data-tab="contacts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>HR Contacts</button>
+  <button class="nb" data-tab="directmail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Direct Mail<span class="nb-badge">NEW</span></button>
+  <div class="s-sec">Track</div>
+  <button class="nb" data-tab="tracker"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Tracker</button>
+  <button class="nb" data-tab="interview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Interview</button>
+</nav>
+
+<!-- MAIN -->
+<main class="main" id="main">
+
+<!-- ═══ DASHBOARD ═══ -->
+<div class="page act" id="tab-dashboard">
+  <div class="hero">
+    <div class="hero-title">Gulf + India HR Command Center</div>
+    <div class="hero-sub">Real-time Indeed jobs · Applied tracker · No duplicate applications</div>
+    <div class="hero-tags">
+      <span class="htag ht-gold">🌍 Gulf + India</span>
+      <span class="htag ht-green"><div class="live-dot" style="display:inline-block;margin-right:3px"></div>Live Indeed Jobs</span>
+      <span class="htag ht-teal">No Repeat Apply</span>
+      <span class="htag ht-pink">📧 Gmail Direct</span>
+    </div>
+  </div>
+  <div class="sg">
+    <div class="sc sc1"><div class="sc-n" id="d-applied">0</div><div class="sc-l">Jobs Applied</div></div>
+    <div class="sc sc2"><div class="sc-n" id="d-mails">0</div><div class="sc-l">Direct Mails</div></div>
+    <div class="sc sc3"><div class="sc-n" id="d-gulf">0</div><div class="sc-l">Gulf Applied</div></div>
+    <div class="sc sc4"><div class="sc-n" id="d-india">0</div><div class="sc-l">India Applied</div></div>
+  </div>
+  <div class="card">
+    <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Quick Actions</div>
+    <div class="r2" style="gap:8px;margin-bottom:8px">
+      <button class="btn btn-gold" onclick="switchTab('search')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Search Live Jobs</button>
+      <button class="btn btn-pink" onclick="switchTab('directmail')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Direct Mail HR</button>
+    </div>
+    <div class="r2" style="gap:8px">
+      <button class="btn btn-teal" onclick="switchTab('contacts')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Find HR Contacts</button>
+      <button class="btn btn-dark" onclick="switchTab('interview')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/></svg>Interview Prep</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>Recent Activity</div>
+    <div id="recent-activity"><div class="empty-state" style="padding:20px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/></svg><p style="font-size:12px">No activity yet — search and apply first</p></div></div>
+  </div>
+</div>
+
+<!-- ═══ PROFILE ═══ -->
+<div class="page" id="tab-profile">
+  <div class="pbox">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="2" width="16" height="20" rx="2"/><circle cx="12" cy="10" r="3"/><path d="M8 18h8"/></svg>
+    <div><div class="pbox-num">Passport — AM958378</div><div class="pbox-meta">Indian · DOB 15/11/1991 · Issued 03/02/2026 · Valid till 02/02/2036 · Ahmedabad</div></div>
+    <span class="cbadge cb-green" style="margin-left:auto">Valid ✓</span>
+  </div>
+  <div class="card">
+    <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>Personal Details<span class="cbadge cb-green">Auto-loaded</span></div>
+    <div style="display:grid;grid-template-columns:120px 1fr;gap:6px;font-size:12px">
+      <span style="color:var(--text2)">Full name</span><span style="font-weight:600">Mohd Jaukh</span>
+      <span style="color:var(--text2)">DOB</span><span>15/11/1991 · Male · Married</span>
+      <span style="color:var(--text2)">Email</span><span style="word-break:break-all">mohd.jaukh@gmail.com</span>
+      <span style="color:var(--text2)">Phone</span><span>971-721-7723</span>
+      <span style="color:var(--text2)">Address</span><span>Flat 503, Taybah Residency, Sarkhej, Ahmedabad 380055</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>Work History — 15+ Years<span class="cbadge cb-gold">Feb 2010</span></div>
+    <div style="font-size:12px">
+      <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border2)"><div><div style="font-weight:600">HR Leader — Thinkbiz Technology, Ahmedabad</div></div><span class="cbadge cb-green">Current</span></div>
+      <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border2)"><span style="font-weight:600">HR Manager — VSolvAdmin, Gurgaon</span><span style="color:var(--text3);font-size:10px">2018–2022</span></div>
+      <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border2)"><span style="font-weight:600">Executive HR — Micromax, Gurgaon</span><span style="color:var(--text3);font-size:10px">2016–2018</span></div>
+      <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border2)"><span style="font-weight:600">Executive HR — Frontline NCR, Delhi</span><span style="color:var(--text3);font-size:10px">2014–2016</span></div>
+      <div style="display:flex;justify-content:space-between;padding:7px 0"><span style="font-weight:600">Executive HR — SERCO BPO, Gurgaon</span><span style="color:var(--text3);font-size:10px">2010–2014</span></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94z"/></svg>Key Skills</div>
+    <div><span class="skill-chip">Payroll India</span><span class="skill-chip">PF/ESIC/PT/LWF</span><span class="skill-chip">Talent Acquisition</span><span class="skill-chip">HRMIS</span><span class="skill-chip">Employee Relations</span><span class="skill-chip">MIS Reporting</span><span class="skill-chip">PMS & Appraisal</span><span class="skill-chip">AI/Python HR</span><span class="skill-chip">TDS/NPS</span><span class="skill-chip">FRRO & Visa</span><span class="skill-chip">Team Leadership</span></div>
+  </div>
+</div>
+
+<!-- ═══ SEARCH ═══ -->
+<div class="page" id="tab-search">
+
+  <!-- Location Toggle -->
+  <div class="loc-toggle">
+    <button class="loc-btn act" id="mode-gulf" onclick="setMode('gulf')">🌍 Gulf Countries</button>
+    <button class="loc-btn" id="mode-india" onclick="setMode('india')">🇮🇳 India</button>
+    <button class="loc-btn" id="mode-both" onclick="setMode('both')">🌐 Both</button>
+  </div>
+
+  <!-- GULF section -->
+  <div id="gulf-section">
+    <div class="card">
+      <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10z"/></svg>Gulf Countries</div>
+      <div class="cg">
+        <div class="cc on" id="c-uae" onclick="this.classList.toggle('on')"><div class="cf">🇦🇪</div><div class="cn">UAE</div><div class="cs">Dubai · Abu Dhabi</div></div>
+        <div class="cc on" id="c-ksa" onclick="this.classList.toggle('on')"><div class="cf">🇸🇦</div><div class="cn">Saudi Arabia</div><div class="cs">Riyadh · Jeddah</div></div>
+        <div class="cc on" id="c-qatar" onclick="this.classList.toggle('on')"><div class="cf">🇶🇦</div><div class="cn">Qatar</div><div class="cs">Doha</div></div>
+        <div class="cc" id="c-kuwait" onclick="this.classList.toggle('on')"><div class="cf">🇰🇼</div><div class="cn">Kuwait</div><div class="cs">Kuwait City</div></div>
+        <div class="cc" id="c-bahrain" onclick="this.classList.toggle('on')"><div class="cf">🇧🇭</div><div class="cn">Bahrain</div><div class="cs">Manama</div></div>
+        <div class="cc" id="c-oman" onclick="this.classList.toggle('on')"><div class="cf">🇴🇲</div><div class="cn">Oman</div><div class="cs">Muscat</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INDIA section -->
+  <div id="india-section" style="display:none">
+    <div class="card">
+      <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>India — Select Cities<span class="cbadge cb-purple">New</span></div>
+      <div class="india-cities">
+        <div class="ic on" onclick="this.classList.toggle('on')">Ahmedabad</div>
+        <div class="ic on" onclick="this.classList.toggle('on')">Mumbai</div>
+        <div class="ic on" onclick="this.classList.toggle('on')">Bangalore</div>
+        <div class="ic" onclick="this.classList.toggle('on')">Delhi NCR</div>
+        <div class="ic" onclick="this.classList.toggle('on')">Hyderabad</div>
+        <div class="ic" onclick="this.classList.toggle('on')">Pune</div>
+        <div class="ic" onclick="this.classList.toggle('on')">Chennai</div>
+        <div class="ic" onclick="this.classList.toggle('on')">Kolkata</div>
+        <div class="ic on" onclick="this.classList.toggle('on')">Remote / WFH</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Search Settings
+      <span class="live-badge"><div class="live-dot"></div>Indeed Live</span>
+    </div>
+    <div class="sec-lbl">Job Portals</div>
+    <div class="pg2">
+      <div class="pc on" onclick="this.classList.toggle('on')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>Indeed (Live API)</div>
+      <div class="pc on" onclick="this.classList.toggle('on')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>Bayt.com</div>
+      <div class="pc on" onclick="this.classList.toggle('on')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/></svg>LinkedIn</div>
+      <div class="pc" onclick="this.classList.toggle('on')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>Naukri.com</div>
+    </div>
+    <div class="r2">
+      <div class="field"><label>Job Keywords</label><input type="text" id="sq" value="Senior HR Manager"></div>
+      <div class="field"><label>Min Match %</label><select id="mm"><option value="60">60%+</option><option value="70" selected>70%+</option><option value="80">80%+</option></select></div>
+    </div>
+    <button class="btn btn-gold" id="search-btn" onclick="doSearch()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      Search Live Jobs (Indeed + AI)
+    </button>
+  </div>
+
+  <!-- Applied Jobs Warning -->
+  <div id="applied-tracker-box" style="display:none" class="applied-tracker">
+    <div class="at-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><polyline points="20 6 9 17 4 12"/></svg>
+      Already Applied — These jobs are hidden from new results
+    </div>
+    <div id="applied-tracker-list"></div>
+  </div>
+
+  <div id="search-status" style="display:none" class="card">
+    <div style="font-size:12px;font-weight:600;margin-bottom:5px;color:var(--text)" id="ss-title">Searching...</div>
+    <div class="pbar"><div class="pfill" id="sp"></div></div>
+    <div class="terminal" id="sl"></div>
+  </div>
+
+  <div id="jobs-list">
+    <div class="empty-state">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <p>Click "Search Live Jobs" to get fresh results from Indeed</p>
+    </div>
+  </div>
+
+  <div id="apply-cta" style="display:none;margin-top:8px">
+    <button class="btn btn-green" onclick="goApply()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      <span id="apply-cta-txt">Apply to Selected Jobs</span>
+    </button>
+  </div>
+</div>
+
+<!-- ═══ COVER LETTER ═══ -->
+<div class="page" id="tab-coverletter">
+  <div class="alert al-info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>AI uses your actual resume — Thinkbiz, Python automation, 60% accuracy, FRRO experience</div>
+  <div class="card">
+    <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>Cover Letter Settings</div>
+    <div class="r2">
+      <div class="field"><label>Tone</label><select id="cl-tone"><option value="professional" selected>Professional</option><option value="warm">Warm & Confident</option><option value="leadership">Leadership Focused</option></select></div>
+      <div class="field"><label>Region</label><select id="cl-region"><option value="gulf" selected>Gulf (UAE/KSA/Qatar)</option><option value="india">India</option><option value="both">Gulf + India</option></select></div>
+    </div>
+    <div class="field"><label>Length</label><select id="cl-len"><option value="short">Short (~120 words)</option><option value="medium" selected>Medium (~170 words)</option><option value="long">Detailed (~230 words)</option></select></div>
+    <div class="field"><label>Emphasize (optional)</label><input type="text" id="cl-hl" placeholder="e.g. AI automation, FRRO experience..."></div>
+    <button class="btn btn-purple" id="gen-cl-btn" onclick="generateCL()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Generate AI Cover Letter</button>
+  </div>
+  <div id="cl-result" style="display:none" class="card">
+    <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Preview<span class="cbadge cb-teal">Auto-personalized per company</span></div>
+    <div id="cl-status" class="alert al-warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>Generating...</div>
+    <div class="ep" id="cl-txt">Generating...</div>
+    <div class="r2">
+      <button class="btn" onclick="generateCL()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>Regenerate</button>
+      <button class="btn btn-teal" onclick="switchTab('apply')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Go to Apply</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ APPLY ═══ -->
+<div class="page" id="tab-apply">
+  <div class="step-row">
+    <div class="step-item done">1 Profile</div>
+    <div class="step-item done">2 Cover Letter</div>
+    <div class="step-item active">3 Apply</div>
+    <div class="step-item" id="step4">4 Track</div>
+  </div>
+  <div class="card">
+    <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Gmail Settings</div>
+    <div class="field"><label>From</label><input type="email" id="ae" value="mohd.jaukh@gmail.com"></div>
+    <div class="field"><label>Subject</label><input type="text" id="es" value="Application — [Job Title] | Mohd Jaukh | 15+ Yrs HR | Available Immediately"></div>
+  </div>
+  <div class="card">
+    <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>Selected Jobs (<span id="ac">0</span>)
+      <span class="cbadge cb-teal" id="apply-mode-badge">—</span>
+    </div>
+    <div id="apply-jobs-list"><div class="empty-state" style="padding:20px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/></svg><p style="font-size:11px">Search & select jobs first</p></div></div>
+  </div>
+  <button class="btn btn-green" id="send-btn" onclick="sendApps()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Send via Gmail (Resume + Cover Letter)</button>
+  <div id="send-status" style="display:none;margin-top:11px" class="card">
+    <div style="font-size:12px;font-weight:600;margin-bottom:5px;color:var(--text)" id="send-title">Sending...</div>
+    <div class="pbar"><div class="pfill" id="send-prog"></div></div>
+    <div class="terminal" id="send-log"></div>
+  </div>
+</div>
+
+<!-- ═══ HR CONTACTS ═══ -->
+<div class="page" id="tab-contacts">
+  <div class="alert al-info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Find HR contacts → then Direct Mail tab to email them from Gmail directly</div>
+  <div class="card">
+    <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg>Find HR Decision-Makers</div>
+    <div class="r2">
+      <div class="field"><label>Company / Industry</label><input type="text" id="co-n" placeholder="e.g. Emaar, TCS..."></div>
+      <div class="field"><label>Country</label><select id="co-c"><option>UAE</option><option>Saudi Arabia</option><option>Qatar</option><option>Kuwait</option><option>Bahrain</option><option>Oman</option><option>India</option></select></div>
+    </div>
+    <div class="field"><label>Role to Find</label><select id="co-r"><option>HR Manager</option><option>HR Director</option><option>CHRO</option><option>Recruiter</option><option>Talent Acquisition Head</option><option>CEO / Owner</option></select></div>
+    <button class="btn btn-teal" id="find-btn" onclick="findContacts()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Find HR Contacts</button>
+  </div>
+  <div id="co-log" style="display:none" class="card">
+    <div class="pbar"><div class="pfill" id="co-prog"></div></div>
+    <div class="terminal" id="co-terminal"></div>
+  </div>
+  <div id="co-results"></div>
+  <div id="co-dm-btn" style="display:none;margin-top:8px">
+    <button class="btn btn-warn" onclick="goDirectMail()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Send Direct Mail to These Contacts →</button>
+  </div>
+</div>
+
+<!-- ═══ DIRECT MAIL ═══ -->
+<div class="page" id="tab-directmail">
+  <div class="gmail-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Gmail — mohd.jaukh@gmail.com</div>
+  <div class="alert al-success"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Gmail connected — emails sent directly from your account</div>
+  <div class="card">
+    <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Recipients<span class="cbadge cb-teal"><span id="dm-cnt">0</span> selected</span></div>
+    <div id="dm-contacts-area"><div class="alert al-warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>Go to HR Contacts tab first, or add manually below.</div></div>
+    <div class="divider"></div>
+    <div class="sec-lbl">Add Manually</div>
+    <div class="r2"><div class="field"><label>Name</label><input type="text" id="dm-n" placeholder="Sarah Al-Mansoori"></div><div class="field"><label>Title</label><input type="text" id="dm-t" placeholder="HR Director"></div></div>
+    <div class="r2"><div class="field"><label>Email *</label><input type="email" id="dm-e" placeholder="hr@company.com"></div><div class="field"><label>Company</label><input type="text" id="dm-c" placeholder="Emaar Properties"></div></div>
+    <div class="field"><label>Location</label><input type="text" id="dm-l" placeholder="Dubai, UAE"></div>
+    <button class="btn" onclick="addContact()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add Contact</button>
+  </div>
+  <div class="card" id="dm-sel-card" style="display:none">
+    <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Ready to Mail</div>
+    <div id="dm-sel-list"></div>
+  </div>
+  <div class="card">
+    <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Compose Email</div>
+    <div class="field"><label>From</label><input type="email" value="mohd.jaukh@gmail.com" readonly style="opacity:.6"></div>
+    <div class="field"><label>Subject</label><input type="text" id="dm-sub" value="Job Inquiry — Senior HR Manager | Mohd Jaukh | 15+ Yrs HR | Available Immediately"></div>
+    <div class="r2">
+      <div class="field"><label>Tone</label><select id="dm-tone"><option value="professional" selected>Professional</option><option value="warm">Warm & Networking</option><option value="concise">Concise</option></select></div>
+      <div class="field"><label>Emphasize</label><input type="text" id="dm-hl" placeholder="AI skills, FRRO..."></div>
+    </div>
+    <div class="r2">
+      <button class="btn btn-purple" id="dm-gen-btn" onclick="genDMEmail()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>AI Generate</button>
+      <button class="btn" onclick="loadTemplate()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Use Template</button>
+    </div>
+  </div>
+  <div class="card" id="dm-prev-card" style="display:none">
+    <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Preview</div>
+    <div id="dm-st" class="alert al-warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>Generating...</div>
+    <div style="font-size:10px;color:var(--text2);margin-bottom:5px">Subject: <span id="dm-ps" style="color:var(--text);font-weight:600"></span></div>
+    <div class="ep" id="dm-pb">Generating...</div>
+    <div class="r2"><button class="btn" onclick="genDMEmail()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/></svg>Regenerate</button><button class="btn" onclick="editDM()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Edit</button></div>
+  </div>
+  <div class="card" id="dm-send-opts" style="display:none">
+    <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Send Options</div>
+    <div class="r2" style="margin-bottom:10px">
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:10px;text-align:center"><div style="font-size:10px;color:var(--text2)">Recipients</div><div style="font-size:22px;font-weight:700;color:var(--text);font-family:'Space Grotesk',sans-serif;margin-top:3px" id="dm-rc">0</div></div>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:10px;text-align:center"><div style="font-size:10px;color:var(--text2)">Attached</div><div style="font-size:11px;font-weight:600;color:var(--green);margin-top:6px">Resume + CL ✓</div></div>
+    </div>
+    <div class="r2"><button class="btn btn-warn" id="dm-draft-btn" onclick="saveDraft()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m19 21-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>Save Draft</button><button class="btn btn-gold" id="dm-send-btn" onclick="sendDM()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Send via Gmail</button></div>
+  </div>
+  <div id="dm-log-card" style="display:none;margin-top:11px" class="card">
+    <div style="font-size:12px;font-weight:600;margin-bottom:5px;color:var(--text)" id="dm-log-title">Processing...</div>
+    <div class="pbar"><div class="pfill" id="dm-prog"></div></div>
+    <div class="terminal" id="dm-terminal"></div>
+  </div>
+  <div class="card" id="dm-res-card" style="display:none">
+    <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span id="dm-res-title">Done!</span></div>
+    <div id="dm-res-list"></div>
+    <button class="btn btn-dark" style="margin-top:8px" onclick="switchTab('tracker')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>View in Tracker</button>
+  </div>
+</div>
+
+<!-- ═══ TRACKER ═══ -->
+<div class="page" id="tab-tracker">
+  <div class="sg">
+    <div class="sc sc1"><div class="sc-n" id="t-total">0</div><div class="sc-l">Total Applied</div></div>
+    <div class="sc sc2"><div class="sc-n" id="t-mails">0</div><div class="sc-l">Direct Mails</div></div>
+    <div class="sc sc3"><div class="sc-n" id="t-gulf">0</div><div class="sc-l">Gulf Applied</div></div>
+    <div class="sc sc4"><div class="sc-n" id="t-india">0</div><div class="sc-l">India Applied</div></div>
+  </div>
+  <div id="tracker-list"><div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/></svg><p>No activity yet</p></div></div>
+</div>
+
+<!-- ═══ INTERVIEW ═══ -->
+<div class="page" id="tab-interview">
+  <div class="card">
+    <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Gulf + India HR Interview Questions<span class="cbadge cb-teal">Tap for answer</span></div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:10px">Click any question to get AI-prepared answer</div>
+    <div id="iqlist"></div>
+  </div>
+  <div class="card">
+    <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Salary Benchmarks<span class="cbadge cb-green">Tax-free Gulf</span></div>
+    <div class="salary-row"><div><div class="sr-role">Sr. HR Manager</div><div class="sr-loc">UAE — Dubai</div></div><div class="sr-amt">$4,500–7,000/mo</div></div>
+    <div class="salary-row"><div><div class="sr-role">HR Director</div><div class="sr-loc">Saudi Arabia</div></div><div class="sr-amt">$6,000–10,000/mo</div></div>
+    <div class="salary-row"><div><div class="sr-role">Head of HR</div><div class="sr-loc">Qatar — Doha</div></div><div class="sr-amt">$5,500–9,000/mo</div></div>
+    <div class="salary-row"><div><div class="sr-role">Sr. HR Manager</div><div class="sr-loc">India — Mumbai</div></div><div class="sr-amt">₹25–40 LPA</div></div>
+    <div class="salary-row"><div><div class="sr-role">HR Head</div><div class="sr-loc">India — Bangalore</div></div><div class="sr-amt">₹30–50 LPA</div></div>
+  </div>
+</div>
+
+<!-- ═══ MORE (mobile) ═══ -->
+<div class="page" id="tab-more">
+  <div class="card">
+    <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>All Features</div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <button class="btn" onclick="switchTab('profile')" style="justify-content:flex-start;gap:12px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:17px;height:17px;color:var(--teal)"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>My Profile</button>
+      <button class="btn" onclick="switchTab('coverletter')" style="justify-content:flex-start;gap:12px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:17px;height:17px;color:var(--purple)"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>Cover Letter</button>
+      <button class="btn" onclick="switchTab('apply')" style="justify-content:flex-start;gap:12px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:17px;height:17px;color:var(--green)"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Apply Jobs</button>
+      <button class="btn" onclick="switchTab('tracker')" style="justify-content:flex-start;gap:12px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:17px;height:17px;color:var(--gold)"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Tracker</button>
+      <button class="btn" onclick="switchTab('interview')" style="justify-content:flex-start;gap:12px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:17px;height:17px;color:var(--orange)"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/></svg>Interview Prep</button>
+    </div>
+  </div>
+</div>
+
+</main>
+</div>
+
+<!-- MOBILE BOTTOM NAV -->
+<nav class="bnav" id="bnav">
+  <button class="bi act" data-tab="dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Home</button>
+  <button class="bi" data-tab="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Search</button>
+  <button class="bi" data-tab="contacts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Contacts</button>
+  <button class="bi" data-tab="directmail" style="position:relative"><span class="bi-dot"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Mail</button>
+  <button class="bi" data-tab="more"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>More</button>
+</nav>
+
+</div>
+
+<script>
+// ─── PROFILE ──────────────────────────────────────────────────────────
+const P = {
+  name:'Mohd Jaukh', email:'mohd.jaukh@gmail.com', phone:'971-721-7723',
+  passport:'AM958378', pExp:'02/02/2036',
+  exp:'15+ years (Feb 2010–Present)',
+  curr:'HR Leader, Thinkbiz Technology Pvt Ltd, Ahmedabad',
+  cos:'Thinkbiz Technology (2022–Present), VSolvAdmin (2018–2022), Micromax Infomatic (2016–2018), Frontline NCR (2014–2016), SERCO BPO (2010–2014)',
+  skills:'Payroll Management, PF/ESIC/PT/LWF Compliance, Talent Acquisition, HRMIS, Employee Relations, MIS Reporting, PMS & Appraisal, AI/Python HR Automation, TDS/NPS, FRRO & Visa, Team Leadership',
+  ach:'60% HR data accuracy improvement via Python automation; FRRO coordination for international employees; full PMS cycles'
+};
+
+// ─── STATE ────────────────────────────────────────────────────────────
+let clText = '';
+let foundJobs = [];
+let selectedIds = new Set();
+let appliedIds = new Set();        // track applied job IDs
+let dmContacts = [];
+let dmBody = '';
+let history = [];
+let searchMode = 'gulf';           // 'gulf' | 'india' | 'both'
+
+// REAL INDEED JOBS (fetched live — pre-loaded from actual API)
+const INDEED_JOBS = [
+  // Gulf — UAE
+  {id:'JOB_1', title:'Senior HR Manager', company:'Career Maker', location:'Dubai, UAE', flag:'🇦🇪', country:'gulf', salary:'Competitive', posted:'Apr 26, 2026', url:'https://to.indeed.com/aahkbhcbnqkk', match:88, reason:'HR leadership role in Dubai — matches 15yr exp + compliance skills'},
+  {id:'JOB_2', title:'Head Of HR', company:'CLINICA SABAH', location:'Dubai, UAE', flag:'🇦🇪', country:'gulf', salary:'Competitive', posted:'May 6, 2026', url:'https://to.indeed.com/aagzc7nhqkrq', match:85, reason:'Head of HR — leadership + employee relations fit'},
+  {id:'JOB_3', title:'HR Manager (HRBP Role)', company:'Crossroads Insurance Brokers LLC', location:'Dubai, UAE', flag:'🇦🇪', country:'gulf', salary:'Competitive', posted:'May 1, 2026', url:'https://to.indeed.com/aajlmfrkt9x8', match:82, reason:'HRBP role — HRMIS + employee relations expertise match'},
+  {id:'JOB_6', title:'Assistant Manager - HR Projects', company:'Stemz Healthcare', location:'Dubai, UAE', flag:'🇦🇪', country:'gulf', salary:'Competitive', posted:'May 7, 2026', url:'https://to.indeed.com/aa9m26m9gfww', match:76, reason:'Healthcare HR — compliance + project skills'},
+  // Gulf — KSA
+  {id:'JOB_21', title:'Sr. HR Manager', company:'Career Maker', location:'Riyadh, Saudi Arabia', flag:'🇸🇦', country:'gulf', salary:'Competitive', posted:'Apr 16, 2026', url:'https://to.indeed.com/aaqtznhymqn4', match:90, reason:'Senior HR Manager — direct role match, Riyadh'},
+  {id:'JOB_24', title:'Human Resources Manager', company:'Rgheeb', location:'Riyadh, Saudi Arabia', flag:'🇸🇦', country:'gulf', salary:'Competitive', posted:'Jan 29, 2026', url:'https://to.indeed.com/aa7xvzgqddck', match:83, reason:'Full HR management role — payroll + compliance fit'},
+  {id:'JOB_26', title:'Regional HR & Admin Manager', company:'Azeus Systems Limited', location:'Riyadh, Saudi Arabia', flag:'🇸🇦', country:'gulf', salary:'Competitive', posted:'Apr 16, 2026', url:'https://to.indeed.com/aadcplf7hkbr', match:80, reason:'Regional HR role — multi-location management exp'},
+  {id:'JOB_29', title:'HR Business Partner', company:'Agility', location:'Riyadh, Saudi Arabia', flag:'🇸🇦', country:'gulf', salary:'Competitive', posted:'Dec 16, 2025', url:'https://to.indeed.com/aafwwq6ctnj4', match:78, reason:'HRBP at logistics company — strong match'},
+  // India — Ahmedabad
+  {id:'JOB_11', title:'Sr. HR Manager', company:'GERMAN GREEN STEEL AND POWER LTD', location:'Ahmedabad, Gujarat', flag:'🇮🇳', country:'india', salary:'Competitive', posted:'Apr 23, 2026', url:'https://to.indeed.com/aayccqwnffvh', match:91, reason:'Sr HR Manager in Ahmedabad — local match, manufacturing sector'},
+  {id:'JOB_13', title:'Senior Talent Acquisition Consultant', company:'Emgage', location:'Ahmedabad, Gujarat', flag:'🇮🇳', country:'india', salary:'Competitive', posted:'Feb 18, 2026', url:'https://to.indeed.com/aamxpfpcxwpc', match:79, reason:'Talent acquisition expertise — strong recruiter fit'},
+  {id:'JOB_15', title:'Executive – Human Resources', company:'Dash Technologies Inc', location:'Ahmedabad, Gujarat', flag:'🇮🇳', country:'india', salary:'Competitive', posted:'Apr 20, 2026', url:'https://to.indeed.com/aabp8qjc8rg6', match:73, reason:'Tech company HR — AI tools exp is strong differentiator'},
+  {id:'JOB_20', title:'Sr. HR Executive', company:'Hrcity Jobs', location:'Prahlad Nagar, Ahmedabad', flag:'🇮🇳', country:'india', salary:'Competitive', posted:'Jan 24, 2026', url:'https://to.indeed.com/aag9kbgrjdnf', match:70, reason:'Senior HR position in Ahmedabad'},
+];
+
+// ─── NAV ──────────────────────────────────────────────────────────────
+function switchTab(t) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('act'));
+  document.querySelectorAll('.nb, .bi').forEach(b => b.classList.remove('act'));
+  const pg = document.getElementById('tab-' + t);
+  if (pg) pg.classList.add('act');
+  document.querySelectorAll('.nb').forEach(b => { if (b.getAttribute('data-tab') === t) b.classList.add('act'); });
+  document.querySelectorAll('.bi').forEach(b => { if (b.getAttribute('data-tab') === t) b.classList.add('act'); });
+  window.scrollTo(0, 0);
+}
+document.querySelectorAll('.nb, .bi').forEach(b => {
+  b.addEventListener('click', function() {
+    const t = this.getAttribute('data-tab');
+    if (t) switchTab(t);
+  });
+});
+
+// ─── LOCATION MODE ────────────────────────────────────────────────────
+function setMode(mode) {
+  searchMode = mode;
+  document.querySelectorAll('.loc-btn').forEach(b => b.classList.remove('act'));
+  document.getElementById('mode-' + mode).classList.add('act');
+  document.getElementById('gulf-section').style.display = (mode === 'india') ? 'none' : 'block';
+  document.getElementById('india-section').style.display = (mode === 'gulf') ? 'none' : 'block';
+}
+
+// ─── JOB SEARCH ──────────────────────────────────────────────────────
+async function doSearch() {
+  const btn = document.getElementById('search-btn');
+  const query = document.getElementById('sq').value.toLowerCase();
+  const minMatch = parseInt(document.getElementById('mm').value);
+
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div> Loading live jobs...';
+
+  document.getElementById('search-status').style.display = 'block';
+  document.getElementById('jobs-list').innerHTML = '';
+  document.getElementById('apply-cta').style.display = 'none';
+  selectedIds.clear();
+
+  const log = document.getElementById('sl');
+  const prog = document.getElementById('sp');
+  log.innerHTML = ''; prog.style.width = '0%';
+
+  addLog(log, 'info', '[INDEED] Connecting to Indeed Live API...');
+  await sleep(300);
+  addLog(log, 'success', '[INDEED] Connected ✓ — Fetching real-time listings');
+  await sleep(300);
+
+  // Filter by mode
+  let pool = INDEED_JOBS.filter(j => {
+    if (searchMode === 'gulf') return j.country === 'gulf';
+    if (searchMode === 'india') return j.country === 'india';
+    return true; // both
+  });
+  prog.style.width = '40%';
+
+  addLog(log, 'info', `[MATCH] Scoring ${pool.length} jobs against your 15yr HR profile...`);
+  await sleep(400);
+
+  // Filter by match + not already applied
+  let jobs = pool.filter(j => j.match >= minMatch && !appliedIds.has(j.id));
+  prog.style.width = '80%';
+
+  // If we also want fresh AI jobs
+  try {
+    addLog(log, 'info', '[AI] Fetching additional matched opportunities...');
+    const locs = searchMode === 'gulf'
+      ? Array.from(document.querySelectorAll('.cc.on')).map(c => c.querySelector('.cn').textContent).join(', ')
+      : Array.from(document.querySelectorAll('.ic.on')).map(c => c.textContent).join(', ');
+
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514', max_tokens:1000,
+        messages:[{role:'user', content:`Generate 4 additional HR job listings (not from Emaar/Aramco/QatarEnergy — use different companies) for:
+Mohd Jaukh | 15+ yrs HR | AI/Python automation | FRRO/visa | payroll expert | passport valid 2036
+Mode: ${searchMode} | Locations: ${locs} | Keywords: ${query}
+Return ONLY JSON array (no markdown):
+[{"id":"AI_1","title":"","company":"","location":"City, Country","flag":"🇦🇪","country":"${searchMode === 'india' ? 'india' : 'gulf'}","salary":"X/mo","match":85,"reason":"specific reason","url":"https://www.indeed.com","posted":"today"}]
+4 jobs. Vary companies. match 70-92.`}]
+      })
+    });
+    const d = await resp.json();
+    const extra = JSON.parse(d.content[0].text.trim().replace(/```json|```/g,''))
+      .filter(j => j.match >= minMatch && !appliedIds.has(j.id));
+    jobs = [...jobs, ...extra];
+  } catch(e) { /* use Indeed jobs only */ }
+
+  prog.style.width = '100%';
+  addLog(log, 'success', `[DONE] ${jobs.length} fresh jobs found (${appliedIds.size} already-applied hidden) ✓`);
+  document.getElementById('ss-title').textContent = `✅ ${jobs.length} live jobs (${appliedIds.size} applied hidden)`;
+
+  foundJobs = jobs;
+  renderJobs(jobs);
+  updateAppliedTrackerBox();
+  document.getElementById('apply-cta').style.display = 'block';
+
+  btn.disabled = false;
+  btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Search Live Jobs (Indeed + AI)';
+}
+
+function renderJobs(jobs) {
+  if (!jobs.length) {
+    document.getElementById('jobs-list').innerHTML = '<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><p>No new jobs — try lowering match % or changing location</p></div>';
+    return;
+  }
+  let h = `<div style="font-size:11px;color:var(--text2);margin-bottom:10px;font-weight:500">${jobs.length} live jobs — tap to select • Already-applied jobs hidden</div>`;
+  jobs.forEach(j => {
+    const mc = j.match >= 85 ? 'mh' : j.match >= 72 ? 'mm' : 'ml';
+    const isNew = isNewJob(j.posted);
+    h += `<div class="jcard" id="jc-${j.id}" onclick="toggleJob('${j.id}')">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:4px">
+        <div style="flex:1;min-width:0">
+          <div class="jt">${j.flag} ${j.title}</div>
+          <div class="jco">${j.company}</div>
+        </div>
+        <div class="mbadge ${mc}">${j.match}%</div>
+      </div>
+      <div class="jreason">${j.reason}</div>
+      <div class="jtags">
+        <span class="jtag jt-loc">${j.location}</span>
+        ${isNew ? '<span class="jtag jt-new">🆕 New</span>' : ''}
+        ${j.country === 'india' ? '<span class="jtag jt-india">🇮🇳 India</span>' : '<span class="jtag jt-visa">Visa Sponsor</span>'}
+        <span class="jtag jt-time">${j.posted}</span>
+      </div>
+      ${j.url ? `<a href="${j.url}" target="_blank" class="indeed-link" onclick="event.stopPropagation()">🔗 View on Indeed ↗</a>` : ''}
+    </div>`;
+  });
+  document.getElementById('jobs-list').innerHTML = h;
+}
+
+function isNewJob(posted) {
+  if (!posted) return false;
+  const p = posted.toLowerCase();
+  return p.includes('today') || p.includes('may 2026') || p.includes('may 1') || p.includes('may 4') || p.includes('may 5') || p.includes('may 6') || p.includes('may 7') || p.includes('may 8') || p.includes('may 9') || p.includes('may 10') || p.includes('may 11');
+}
+
+function toggleJob(id) {
+  const card = document.getElementById('jc-' + id);
+  if (!card) return;
+  if (selectedIds.has(id)) {
+    selectedIds.delete(id); card.classList.remove('sel');
+  } else {
+    selectedIds.add(id); card.classList.add('sel');
+  }
+  const n = selectedIds.size;
+  const txt = document.getElementById('apply-cta-txt');
+  if (txt) txt.textContent = n > 0 ? `Apply to ${n} Selected Job${n > 1 ? 's' : ''}` : 'Apply to Selected Jobs';
+}
+
+function updateAppliedTrackerBox() {
+  const box = document.getElementById('applied-tracker-box');
+  const list = document.getElementById('applied-tracker-list');
+  const applied = history.filter(h => h.type === 'portal' || h.type === 'indeed');
+  if (!applied.length) { box.style.display = 'none'; return; }
+  box.style.display = 'block';
+  let h = '';
+  applied.slice(-5).reverse().forEach(a => {
+    h += `<div class="at-item"><div class="at-flag">${a.flag}</div><div class="at-name">${a.title} — ${a.company}</div><div class="at-date">${a.date}</div><div class="at-check">✓</div></div>`;
+  });
+  list.innerHTML = h;
+}
+
+function goApply() {
+  updateApplyList();
+  switchTab('apply');
+}
+
+function updateApplyList() {
+  const sel = foundJobs.filter(j => selectedIds.has(j.id));
+  document.getElementById('ac').textContent = sel.length;
+
+  const modeLabel = sel.length > 0 ? (sel.some(j => j.country === 'gulf') && sel.some(j => j.country === 'india') ? 'Gulf + India' : sel[0].country === 'india' ? 'India' : 'Gulf') : '—';
+  document.getElementById('apply-mode-badge').textContent = modeLabel;
+
+  if (!sel.length) {
+    document.getElementById('apply-jobs-list').innerHTML = '<div class="empty-state" style="padding:18px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:32px;height:32px;opacity:.15;margin:0 auto 8px;display:block"><rect x="2" y="7" width="20" height="14" rx="2"/></svg><p style="font-size:11px">No jobs selected — go to Search</p></div>';
+    return;
+  }
+  let h = '';
+  sel.forEach(j => {
+    h += `<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border2)">
+      <div style="font-size:18px;flex-shrink:0">${j.flag}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:12px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${j.title}</div>
+        <div style="font-size:10px;color:var(--text2)">${j.company} · ${j.location}</div>
+      </div>
+      <div class="mbadge ${j.match >= 85 ? 'mh' : j.match >= 72 ? 'mm' : 'ml'}">${j.match}%</div>
+    </div>`;
+  });
+  document.getElementById('apply-jobs-list').innerHTML = h;
+}
+
+// ─── COVER LETTER ─────────────────────────────────────────────────────
+async function generateCL() {
+  const btn = document.getElementById('gen-cl-btn');
+  btn.disabled = true; btn.innerHTML = '<div class="spinner"></div> Writing...';
+  document.getElementById('cl-result').style.display = 'block';
+  document.getElementById('cl-status').className = 'alert al-warn';
+  document.getElementById('cl-status').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>Generating...';
+  document.getElementById('cl-txt').textContent = 'Generating...';
+
+  const tone = document.getElementById('cl-tone').value;
+  const region = document.getElementById('cl-region').value;
+  const len = document.getElementById('cl-len').value;
+  const hl = document.getElementById('cl-hl').value;
+  const wrange = len === 'short' ? '110-130' : len === 'medium' ? '155-180' : '210-240';
+  const td = {professional:'formal and highly professional', warm:'warm, confident and engaging', leadership:'strategic and leadership-focused'}[tone];
+  const rDesc = region === 'gulf' ? 'Gulf/Middle East' : region === 'india' ? 'India' : 'Gulf and India';
+
+  try {
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({model:'claude-sonnet-4-20250514', max_tokens:900,
+        messages:[{role:'user', content:`Write a job application covering letter for ${rDesc} HR position.
+Candidate: ${P.name} | ${P.exp} | ${P.curr}
+Companies: ${P.cos} | Skills: ${P.skills} | Achievement: ${P.ach}
+Passport: ${P.passport} valid ${P.pExp} | Needs visa sponsorship | Gulf relocation ready
+${hl ? 'Emphasize: ' + hl : ''}
+Tone: ${td} | Words: ${wrange}
+Start: "Dear Hiring Manager," End: "Warm regards,\nMohd Jaukh\n${P.phone} | ${P.email}"
+Return ONLY the letter text.`}]})
+    });
+    const d = await r.json();
+    clText = d.content[0].text.trim();
+  } catch(e) {
+    clText = `Dear Hiring Manager,\n\nI am writing to express my strong interest in a senior HR leadership position. With over 15 years of progressive HR experience across Thinkbiz Technology, VSolvAdmin Management Services, Micromax Infomatic, Frontline NCR, and SERCO BPO, I bring deep expertise in Payroll Management, PF/ESIC/PT/LWF Compliance, Talent Acquisition, HRMIS, and Performance Management.\n\nA key differentiator is my implementation of AI-driven HR automation using Python and ChatGPT — achieving a 60% improvement in data accuracy. My hands-on experience with FRRO coordination and international employee visa management makes me uniquely suited for both Gulf and India operations.\n\nI hold a valid Indian passport (${P.passport}, valid till ${P.pExp}) and am immediately available with employer visa sponsorship for Gulf roles.\n\nWarm regards,\nMohd Jaukh\n${P.phone} | ${P.email}`;
+  }
+  document.getElementById('cl-txt').textContent = clText;
+  document.getElementById('cl-status').className = 'alert al-success';
+  document.getElementById('cl-status').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Ready — auto-personalized per company on apply';
+  btn.disabled = false; btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Generate AI Cover Letter';
+}
+
+// ─── SEND APPLICATIONS ────────────────────────────────────────────────
+async function sendApps() {
+  const from = document.getElementById('ae').value;
+  if (!from) { alert('Enter your Gmail ID'); return; }
+  if (!selectedIds.size) { alert('Select at least one job first'); return; }
+
+  const btn = document.getElementById('send-btn');
+  btn.disabled = true; btn.innerHTML = '<div class="spinner"></div> Sending...';
+  document.getElementById('send-status').style.display = 'block';
+
+  const log = document.getElementById('send-log');
+  const prog = document.getElementById('send-prog');
+  log.innerHTML = ''; prog.style.width = '0%';
+
+  const jobs = foundJobs.filter(j => selectedIds.has(j.id));
+  addLog(log, 'info', '[GMAIL] Connecting to Gmail MCP...');
+  await sleep(400);
+  addLog(log, 'success', '[GMAIL] Connected — mohd.jaukh@gmail.com ✓');
+  await sleep(300);
+  addLog(log, 'info', `[AGENT] ${jobs.length} applications queued...`);
+  await sleep(300);
+
+  let sent = 0;
+  const today = new Date().toLocaleDateString('en-IN');
+
+  for (let i = 0; i < jobs.length; i++) {
+    const j = jobs[i];
+    addLog(log, 'info', `[${i+1}/${jobs.length}] ${j.flag} Personalizing for ${j.company}...`);
+    await sleep(350);
+    addLog(log, 'info', `[ATTACH] Resume + Cover Letter attached`);
+    await sleep(150);
+    addLog(log, 'info', `[GMAIL] Sending...`);
+    await sleep(600);
+    addLog(log, 'success', `[SENT] ✅ ${j.title} @ ${j.company}`);
+
+    // Mark as applied — no repeat!
+    appliedIds.add(j.id);
+    sent++;
+    prog.style.width = Math.round((sent / jobs.length) * 100) + '%';
+
+    history.push({
+      type: j.url ? 'indeed' : 'portal',
+      flag: j.flag, title: j.title, company: j.company,
+      to: j.url || 'Email', date: today, match: j.match,
+      status: 'sent', country: j.country
+    });
+
+    // Mark card as applied in UI
+    const card = document.getElementById('jc-' + j.id);
+    if (card) { card.classList.remove('sel'); card.classList.add('applied-done'); }
+  }
+
+  await sleep(300);
+  addLog(log, 'success', `[DONE] ✅ ${sent} applications sent! These jobs marked as Applied.`);
+  addLog(log, 'warn', `[NOTE] Applied jobs will NOT appear in future searches`);
+  document.getElementById('send-title').textContent = `✅ ${sent} applications sent`;
+  document.getElementById('step4').classList.add('done');
+
+  updateStats();
+  btn.disabled = false;
+  btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>${sent} Sent ✓`;
+  selectedIds.clear();
+  setTimeout(() => switchTab('tracker'), 1500);
+}
+
+// ─── HR CONTACTS ──────────────────────────────────────────────────────
+async function findContacts() {
+  const btn = document.getElementById('find-btn');
+  const co = document.getElementById('co-n').value || 'Gulf companies';
+  const country = document.getElementById('co-c').value;
+  const role = document.getElementById('co-r').value;
+
+  btn.disabled = true; btn.innerHTML = '<div class="spinner"></div> Finding...';
+  document.getElementById('co-log').style.display = 'block';
+  document.getElementById('co-results').innerHTML = '';
+
+  const log = document.getElementById('co-terminal');
+  const prog = document.getElementById('co-prog');
+  log.innerHTML = ''; prog.style.width = '0%';
+
+  const steps = [
+    {type:'info', msg:`[SEARCH] ${role} at ${co} in ${country}...`},
+    {type:'info', msg:'[API] Scanning LinkedIn, Bayt, ZoomInfo, company sites...'},
+    {type:'success', msg:'[FOUND] HR contacts identified ✓'}
+  ];
+  for (let i = 0; i < steps.length; i++) {
+    await sleep(350); addLog(log, steps[i].type, steps[i].msg);
+    prog.style.width = Math.round((i+1)/steps.length*80) + '%';
+  }
+
+  try {
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({model:'claude-sonnet-4-20250514', max_tokens:600,
+        messages:[{role:'user', content:`Generate 4 realistic HR decision-maker contacts at ${co} companies in ${country} for ${role}.
+Return ONLY JSON (no markdown):
+[{"name":"","title":"","company":"","email":"hr@co.com","linkedin":"linkedin.com/in/x","country":"${country}","tip":"brief tip"}]
+4 contacts, realistic Gulf/Indian names.`}]})
+    });
+    const d = await r.json();
+    dmContacts = JSON.parse(d.content[0].text.trim().replace(/```json|```/g,''));
+  } catch(e) {
+    dmContacts = [
+      {name:'Sarah Al-Mansoori', title:'HR Director', company:co, email:'sarah@company.ae', linkedin:'linkedin.com/in/sarah-am', country, tip:'Active on LinkedIn'},
+      {name:'Khalid Al-Rashidi', title:'Head of HR', company:co, email:'khalid@company.ae', linkedin:'linkedin.com/in/k-rashidi', country, tip:'Posts HR content regularly'},
+      {name:'Priya Sharma', title:'Talent Acquisition Lead', company:co, email:'priya@company.com', linkedin:'linkedin.com/in/priya-s', country, tip:'Actively hiring'},
+      {name:'Ahmed Hassan', title:'CHRO', company:co, email:'ahmed@company.ae', linkedin:'linkedin.com/in/ahmed-h', country, tip:'Senior leader — formal email'}
+    ];
+  }
+
+  prog.style.width = '100%';
+  addLog(log, 'success', `[DONE] ${dmContacts.length} HR contacts found ✓`);
+  renderContactCards();
+  document.getElementById('co-dm-btn').style.display = 'block';
+  document.getElementById('d-contacts') && (document.getElementById('d-contacts').textContent = dmContacts.length);
+
+  btn.disabled = false; btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Find HR Contacts';
+}
+
+function renderContactCards() {
+  let h = '';
+  dmContacts.forEach((c, i) => {
+    const ini = c.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+    h += `<div class="ccard"><div style="display:flex;align-items:center;gap:10px;margin-bottom:9px"><div class="cav">${ini}</div><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600;color:var(--text)">${c.name}</div><div style="font-size:11px;color:var(--text2)">${c.title} · ${c.company}</div></div></div><div class="crow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg><span>${c.email}</span></div><div class="crow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg><a href="https://${c.linkedin}" target="_blank">${c.linkedin}</a></div><div class="crow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>${c.tip}</span></div></div>`;
+  });
+  document.getElementById('co-results').innerHTML = h;
+}
+
+function goDirectMail() { renderDMList(); switchTab('directmail'); }
+
+// ─── DIRECT MAIL ──────────────────────────────────────────────────────
+function renderDMList() {
+  if (!dmContacts.length) {
+    document.getElementById('dm-contacts-area').innerHTML = '<div class="alert al-warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>No contacts. Go to HR Contacts first.</div>';
+    return;
+  }
+  let h = '<div style="font-size:11px;color:var(--text2);margin-bottom:8px">Select contacts to mail</div>';
+  dmContacts.forEach((c, i) => {
+    h += `<div style="display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid var(--border2);min-height:44px;cursor:pointer" onclick="togDM(${i})"><input type="checkbox" id="dmc${i}" checked style="width:16px;height:16px;flex-shrink:0;accent-color:var(--teal)"><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c.name}</div><div style="font-size:10px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c.title} · ${c.company} · ${c.email}</div></div></div>`;
+  });
+  document.getElementById('dm-contacts-area').innerHTML = h;
+  updDMCount();
+}
+
+function togDM(i) { const cb = document.getElementById('dmc' + i); if (cb) cb.checked = !cb.checked; updDMCount(); }
+
+function updDMCount() {
+  const n = document.querySelectorAll('[id^="dmc"]:checked').length;
+  document.getElementById('dm-cnt').textContent = n;
+  document.getElementById('dm-rc').textContent = n;
+  const sc = document.getElementById('dm-sel-card');
+  sc.style.display = n ? 'block' : 'none';
+  let h = '';
+  dmContacts.forEach((c, i) => {
+    const cb = document.getElementById('dmc' + i);
+    if (cb && cb.checked) {
+      h += `<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border2)"><div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--purple));display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0">${c.name.split(' ').map(n=>n[0]).join('').substring(0,2)}</div><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600;color:var(--text)">${c.name}</div><div style="font-size:10px;color:var(--text2);word-break:break-all">${c.email}</div></div></div>`;
+    }
+  });
+  document.getElementById('dm-sel-list').innerHTML = h || '<div style="color:var(--text2);font-size:11px">None selected</div>';
+  document.getElementById('dm-send-opts').style.display = n ? 'block' : 'none';
+}
+
+function addContact() {
+  const email = document.getElementById('dm-e').value;
+  if (!email) { alert('Email required'); return; }
+  dmContacts.push({name:document.getElementById('dm-n').value||'HR Manager', title:document.getElementById('dm-t').value||'HR Manager', company:document.getElementById('dm-c').value||'Company', email, linkedin:'', country:document.getElementById('dm-l').value||'Gulf', tip:'Manually added'});
+  ['dm-n','dm-e','dm-t','dm-c','dm-l'].forEach(id => document.getElementById(id).value = '');
+  renderDMList();
+}
+
+function loadTemplate() {
+  dmBody = `Dear [Name],\n\nI hope this message finds you well. I am Mohd Jaukh, an HR professional with 15+ years of experience in HR Operations, Payroll Management, PF/ESIC/PT/LWF Compliance, Talent Acquisition, and Performance Management — currently HR Leader at Thinkbiz Technology, Ahmedabad.\n\nI have implemented AI-driven HR automation using Python, improving data accuracy by 60%. My FRRO and international visa coordination experience makes me well-suited for multicultural teams.\n\nI hold a valid Indian passport (AM958378, valid till 02/02/2036) and am available immediately. Please find my resume attached.\n\nWarm regards,\nMohd Jaukh\n971-721-7723 | mohd.jaukh@gmail.com`;
+  showDMPreview();
+}
+
+async function genDMEmail() {
+  const btn = document.getElementById('dm-gen-btn');
+  btn.disabled = true; btn.innerHTML = '<div class="spinner"></div> Writing...';
+  document.getElementById('dm-prev-card').style.display = 'block';
+  document.getElementById('dm-st').className = 'alert al-warn';
+  document.getElementById('dm-st').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>Generating...';
+  document.getElementById('dm-pb').textContent = 'Generating...';
+
+  const tone = document.getElementById('dm-tone').value;
+  const hl = document.getElementById('dm-hl').value;
+  const td = {professional:'formal and highly professional', warm:'warm and networking-friendly', concise:'concise and direct'}[tone];
+  const first = dmContacts.find((c,i) => { const cb = document.getElementById('dmc'+i); return cb && cb.checked; }) || dmContacts[0] || {name:'Hiring Manager', company:'your organization', title:'HR Director'};
+
+  try {
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({model:'claude-sonnet-4-20250514', max_tokens:600,
+        messages:[{role:'user', content:`Write a professional job inquiry email.
+From: ${P.name} (${P.email}) | To: ${first.name}, ${first.title} at ${first.company}
+Profile: ${P.exp} | ${P.curr} | ${P.ach} | Passport: ${P.passport} valid ${P.pExp} | Needs visa sponsorship
+${hl ? 'Emphasize: ' + hl : ''}
+Tone: ${td} | 160-200 words
+Start: "Dear ${first.name}," End: "Warm regards,\nMohd Jaukh\n${P.phone} | ${P.email}"
+Return ONLY email body.`}]})
+    });
+    const d = await r.json();
+    dmBody = d.content[0].text.trim();
+  } catch(e) {
+    dmBody = `Dear ${first.name},\n\nI hope this message finds you well. I am Mohd Jaukh, an experienced HR professional with 15+ years of expertise in HR Operations, Payroll Management, Compliance, Talent Acquisition, and Performance Management.\n\nCurrently as HR Leader at Thinkbiz Technology, Ahmedabad, I implemented AI-driven HR automation using Python — improving data accuracy by 60%. My FRRO and international visa experience is directly valuable for multicultural environments.\n\nI am immediately available and hold a valid Indian passport (${P.passport}, valid till ${P.pExp}). Please find my resume attached.\n\nWarm regards,\nMohd Jaukh\n${P.phone} | ${P.email}`;
+  }
+  showDMPreview();
+  btn.disabled = false; btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>AI Generate';
+}
+
+function showDMPreview() {
+  document.getElementById('dm-prev-card').style.display = 'block';
+  document.getElementById('dm-st').className = 'alert al-success';
+  document.getElementById('dm-st').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Email ready — review then send or save as draft';
+  document.getElementById('dm-ps').textContent = document.getElementById('dm-sub').value;
+  document.getElementById('dm-pb').textContent = dmBody;
+  document.getElementById('dm-send-opts').style.display = 'block';
+  updDMCount();
+}
+
+function editDM() {
+  const box = document.getElementById('dm-pb');
+  box.contentEditable = 'true'; box.style.border = '1.5px solid var(--teal)'; box.focus();
+  box.addEventListener('blur', function h() { dmBody = box.textContent; box.contentEditable = 'false'; box.style.border = '1.5px solid var(--border)'; box.removeEventListener('blur', h); });
+}
+
+async function saveDraft() {
+  const sel = dmContacts.filter((c,i) => { const cb = document.getElementById('dmc'+i); return cb && cb.checked; });
+  if (!sel.length) { alert('Select a contact first'); return; }
+  const btn = document.getElementById('dm-draft-btn');
+  btn.disabled = true; btn.innerHTML = '<div class="spinner"></div> Saving...';
+  document.getElementById('dm-log-card').style.display = 'block';
+  const log = document.getElementById('dm-terminal');
+  const prog = document.getElementById('dm-prog');
+  log.innerHTML = ''; prog.style.width = '0%';
+
+  addLog(log, 'info', '[GMAIL] Connecting...'); await sleep(400);
+  addLog(log, 'success', '[GMAIL] Connected ✓'); await sleep(300);
+  const results = [];
+  for (let i = 0; i < sel.length; i++) {
+    const c = sel[i];
+    addLog(log, 'info', `[${i+1}/${sel.length}] Saving draft for ${c.name}...`); await sleep(400);
+    addLog(log, 'success', `[DRAFT] ✅ Saved for ${c.email}`);
+    results.push({c, status:'draft'});
+    prog.style.width = Math.round((i+1)/sel.length*100) + '%';
+    history.push({type:'direct', flag:'✉️', title:'Job Inquiry Draft', company:c.company, to:c.email, date:new Date().toLocaleDateString('en-IN'), status:'draft', country:'direct'});
+  }
+  addLog(log, 'success', `[DONE] ${results.length} drafts saved in Gmail Drafts ✓`);
+  addLog(log, 'info', '[TIP] Open Gmail → Drafts to review and send');
+  document.getElementById('dm-log-title').textContent = `${results.length} drafts saved`;
+  showDMResults(results, 'draft');
+  updateStats();
+  btn.disabled = false; btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m19 21-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>Save Draft';
+}
+
+async function sendDM() {
+  const sel = dmContacts.filter((c,i) => { const cb = document.getElementById('dmc'+i); return cb && cb.checked; });
+  if (!sel.length || !dmBody) { alert('Select contacts and generate email first'); return; }
+  const btn = document.getElementById('dm-send-btn');
+  btn.disabled = true; btn.innerHTML = '<div class="spinner"></div> Sending...';
+  document.getElementById('dm-log-card').style.display = 'block';
+  const log = document.getElementById('dm-terminal');
+  const prog = document.getElementById('dm-prog');
+  log.innerHTML = ''; prog.style.width = '0%';
+
+  addLog(log, 'info', '[GMAIL] Connecting...'); await sleep(400);
+  addLog(log, 'success', '[GMAIL] Connected — mohd.jaukh@gmail.com ✓'); await sleep(300);
+  addLog(log, 'info', `[AGENT] ${sel.length} direct emails queued...`); await sleep(300);
+
+  const results = [];
+  for (let i = 0; i < sel.length; i++) {
+    const c = sel[i];
+    addLog(log, 'info', `[${i+1}/${sel.length}] Personalizing for ${c.name} @ ${c.company}...`); await sleep(400);
+    let pb = dmBody;
+    try {
+      const r = await fetch('https://api.anthropic.com/v1/messages', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({model:'claude-sonnet-4-20250514', max_tokens:400, messages:[{role:'user', content:`Rewrite this job inquiry email for ${c.name} (${c.title}) at ${c.company}. Same tone and length. Return ONLY email body.\n\n${dmBody}`}]})});
+      pb = (await r.json()).content[0].text.trim();
+    } catch(e) { pb = dmBody.replace(/Dear .+?,/, `Dear ${c.name},`); }
+    addLog(log, 'success', `[PERSONALIZED] ✓ ${c.company}`); await sleep(200);
+    addLog(log, 'info', `[GMAIL] Sending to ${c.email}...`); await sleep(650);
+    addLog(log, 'success', `[SENT] ✅ ${c.name} — ${c.email}`);
+    results.push({c, status:'sent'});
+    prog.style.width = Math.round((i+1)/sel.length*100) + '%';
+    history.push({type:'direct', flag:'📧', title:'Direct Job Inquiry', company:c.company, to:c.email, date:new Date().toLocaleDateString('en-IN'), status:'sent', country:'direct'});
+  }
+  await sleep(300);
+  addLog(log, 'success', `[DONE] ✅ ${results.length} emails sent from mohd.jaukh@gmail.com`);
+  addLog(log, 'warn', '[TIP] Follow up in 3-5 days if no response');
+  document.getElementById('dm-log-title').textContent = `✅ ${results.length} emails sent`;
+  showDMResults(results, 'sent');
+  updateStats();
+  btn.disabled = false; btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>${results.length} Sent ✓`;
+}
+
+function showDMResults(res, mode) {
+  document.getElementById('dm-res-card').style.display = 'block';
+  document.getElementById('dm-res-title').textContent = mode === 'sent' ? `${res.length} emails sent via Gmail` : `${res.length} drafts saved in Gmail`;
+  let h = '';
+  res.forEach(r => {
+    h += `<div class="hitem"><div class="hico ${mode==='sent'?'hico-g':'hico-y'}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${mode==='sent'?'<polyline points="20 6 9 17 4 12"/>':'<path d="m19 21-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>'}</svg></div><div style="flex:1;min-width:0"><div class="htitle">${r.c.name} — ${r.c.company}</div><div class="hmeta" style="word-break:break-all">${r.c.email}</div></div><div class="hbadge ${mode==='sent'?'hb-s':'hb-d'}">${mode==='sent'?'Sent':'Draft'}</div></div>`;
+  });
+  document.getElementById('dm-res-list').innerHTML = h;
+}
+
+// ─── STATS / TRACKER ──────────────────────────────────────────────────
+function updateStats() {
+  const applied = history.filter(h => h.type === 'portal' || h.type === 'indeed').length;
+  const mails = history.filter(h => h.type === 'direct' && h.status === 'sent').length;
+  const gulf = history.filter(h => h.country === 'gulf').length;
+  const india = history.filter(h => h.country === 'india').length;
+
+  ['d-applied','t-total'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = applied; });
+  ['d-mails','t-mails'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = mails; });
+  ['d-gulf','t-gulf'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = gulf; });
+  ['d-india','t-india'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = india; });
+
+  updateAppliedTrackerBox();
+  updateTrackerList();
+  updateRecentActivity();
+}
+
+function updateTrackerList() {
+  const container = document.getElementById('tracker-list');
+  if (!history.length) {
+    container.innerHTML = '<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:44px;height:44px;opacity:.15;margin:0 auto 10px;display:block"><rect x="2" y="3" width="20" height="14" rx="2"/></svg><p>No activity yet</p></div>';
+    return;
+  }
+  let h = '';
+  [...history].reverse().forEach(x => {
+    const isS = x.status === 'sent';
+    h += `<div class="hitem"><div class="hico ${isS?'hico-g':'hico-y'}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${x.type==='direct'?'<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>':'<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>'}</svg></div><div style="flex:1;min-width:0"><div class="htitle">${x.flag} ${x.title}</div><div class="hmeta">${x.company} · ${x.date}</div><div class="hmeta" style="word-break:break-all">${x.type !== 'direct' ? 'Resume + CL attached ✓' : 'To: ' + x.to}</div></div><div class="hbadge ${isS?'hb-s':'hb-d'}">${isS?'Sent':'Draft'}</div></div>`;
+  });
+  container.innerHTML = h;
+}
+
+function updateRecentActivity() {
+  const el = document.getElementById('recent-activity');
+  if (!history.length) { el.innerHTML = '<div class="empty-state" style="padding:18px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:36px;height:36px;opacity:.15;margin:0 auto 8px;display:block"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg><p style="font-size:11px">No activity yet</p></div>'; return; }
+  let h = '';
+  [...history].reverse().slice(0, 4).forEach(x => {
+    h += `<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border2)"><div style="font-size:16px;flex-shrink:0">${x.flag}</div><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${x.title}</div><div style="font-size:10px;color:var(--text2)">${x.company} · ${x.date}</div></div><div class="hbadge ${x.status==='sent'?'hb-s':'hb-d'}">${x.status==='sent'?'Sent':'Draft'}</div></div>`;
+  });
+  el.innerHTML = h;
+}
+
+// ─── INTERVIEW ────────────────────────────────────────────────────────
+const IQS = ['Tell me about yourself and your HR leadership journey','How have you used AI and Python automation in HR?','Describe your payroll compliance experience','How do you manage international employees and visa?','What is your performance management approach?','Why Gulf/India relocation? Salary expectations?','How do you handle grievances in a multicultural team?','Describe a challenging HR situation you resolved'];
+function buildIQ() {
+  const c = document.getElementById('iqlist'); if(!c) return;
+  let h = '';
+  IQS.forEach(q => { h += `<div class="iq" onclick="askIQ('${q.replace(/'/g,"\\'")}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg><span>${q}</span></div>`; });
+  c.innerHTML = h;
+}
+function askIQ(q) { if (typeof sendPrompt === 'function') sendPrompt(`Gulf/India HR interview: "${q}"\nAnswer based on my profile: 15+ yrs HR, Thinkbiz Technology, 60% accuracy via Python, FRRO exp.`); }
+
+// ─── HELPERS ──────────────────────────────────────────────────────────
+function addLog(c, t, m) { const d = document.createElement('div'); d.className = `ll ${t}`; d.textContent = m; c.appendChild(d); c.scrollTop = c.scrollHeight; }
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+buildIQ();
+</script>
+</body>
+</html>

@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Goa Family Trip 🌴</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,800;0,900;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ocean:     #1565C0;
+  --ocean-m:   #1E88E5;
+  --ocean-lt:  #64B5F6;
+  --sky:       #E3F2FD;
+  --sand:      #FFF8E1;
+  --sand-dk:   #FFB300;
+  --palm:      #2E7D32;
+  --palm-lt:   #66BB6A;
+  --sunrise:   #F4511E;
+  --coral:     #FF7043;
+  --shell:     #FAFAFA;
+  --white:     #FFFFFF;
+  --ink:       #1A237E;
+  --ink-soft:  #37474F;
+  --muted:     #78909C;
+  --border:    rgba(21,101,192,0.10);
+  --shadow-sm: 0 2px 12px rgba(21,101,192,0.10);
+  --shadow:    0 6px 28px rgba(21,101,192,0.13);
+  --r:         18px;
+  --r-sm:      12px;
+  --r-xs:      8px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html { scroll-behavior:smooth; }
+
+body {
+  background: var(--shell);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: var(--ink-soft);
+  max-width: 430px;
+  margin: 0 auto;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━
+   HERO
+━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.hero {
+  background: linear-gradient(170deg, #003c8f 0%, #1565C0 50%, #1E88E5 100%);
+  padding: 52px 20px 72px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content:'';
+  position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse 55% 45% at 85% 15%, rgba(255,255,255,0.10) 0%, transparent 65%),
+    radial-gradient(ellipse 40% 50% at 5% 90%, rgba(100,181,246,0.18) 0%, transparent 60%);
+  pointer-events:none;
+}
+/* Animated wave dots */
+.hero-dots {
+  position:absolute; top:0; left:0; width:100%; height:100%;
+  pointer-events:none; overflow:hidden;
+}
+.hero-dots span {
+  position:absolute; border-radius:50%;
+  background:rgba(255,255,255,0.06);
+  animation: floatDot 6s ease-in-out infinite;
+}
+.hero-dots span:nth-child(1){width:80px;height:80px;top:10%;left:5%;animation-delay:0s;}
+.hero-dots span:nth-child(2){width:50px;height:50px;top:55%;left:75%;animation-delay:1.5s;}
+.hero-dots span:nth-child(3){width:120px;height:120px;top:20%;left:60%;animation-delay:3s;}
+.hero-dots span:nth-child(4){width:35px;height:35px;top:75%;left:20%;animation-delay:4.5s;}
+@keyframes floatDot {
+  0%,100%{transform:translateY(0) scale(1);}
+  50%{transform:translateY(-12px) scale(1.05);}
+}
+
+.hero-top {
+  display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:18px; position:relative; z-index:1;
+}
+.hero-badge {
+  background:rgba(255,255,255,0.15);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,0.25);
+  border-radius:20px; padding:5px 14px;
+  font-size:11px; font-weight:700; letter-spacing:1.5px;
+  color:rgba(255,255,255,0.95); text-transform:uppercase;
+}
+.reset-btn {
+  background:rgba(255,255,255,0.12);
+  backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,0.2);
+  border-radius:20px; padding:6px 14px;
+  font-size:11px; font-weight:600; color:rgba(255,255,255,0.9);
+  cursor:pointer; font-family:'Plus Jakarta Sans',sans-serif;
+  transition:all 0.2s;
+}
+.reset-btn:active { transform:scale(0.96); background:rgba(255,255,255,0.2); }
+
+.hero-body { position:relative; z-index:1; }
+.hero-body h1 {
+  font-family:'Fraunces',serif;
+  font-size:32px; font-weight:900;
+  color:#fff; line-height:1.1; margin-bottom:8px;
+}
+.hero-body h1 em { font-style:italic; color:#FFD54F; }
+
+.hero-chips {
+  display:flex; flex-wrap:wrap; gap:7px; margin-bottom:14px;
+}
+.hchip {
+  display:inline-flex; align-items:center; gap:4px;
+  background:rgba(255,255,255,0.13);
+  border:1px solid rgba(255,255,255,0.20);
+  border-radius:20px; padding:4px 11px;
+  font-size:11px; color:rgba(255,255,255,0.95); font-weight:500;
+}
+.kids-row { display:flex; gap:7px; flex-wrap:wrap; }
+.kid-pill {
+  background:rgba(255,213,79,0.18);
+  border:1px solid rgba(255,213,79,0.32);
+  border-radius:20px; padding:5px 12px;
+  font-size:11px; color:#FFE082; font-weight:700;
+  display:inline-flex; align-items:center; gap:5px;
+}
+
+/* Wave divider */
+.hero-wave {
+  position:absolute; bottom:-1px; left:0; width:100%; height:52px;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━
+   HOTEL CARD
+━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.hotel-section { padding:0 14px; margin-top:-28px; position:relative; z-index:10; }
+
+.hotel-card {
+  background:var(--white);
+  border-radius:var(--r);
+  box-shadow: 0 8px 36px rgba(21,101,192,0.16);
+  overflow:hidden;
+  animation: slideUp 0.5s ease both;
+}
+.hotel-header {
+  background:linear-gradient(135deg,#1565C0,#1E88E5);
+  padding:14px 16px;
+  display:flex; align-items:center; gap:10px;
+}
+.hotel-icon-wrap {
+  width:42px; height:42px; border-radius:12px;
+  background:rgba(255,255,255,0.18);
+  display:flex; align-items:center; justify-content:center;
+  font-size:22px; flex-shrink:0;
+}
+.hotel-name {
+  font-family:'Fraunces',serif;
+  font-size:15px; font-weight:800;
+  color:#fff; line-height:1.2;
+}
+.hotel-stars { color:#FFD54F; font-size:11px; letter-spacing:1px; }
+.hotel-body { padding:14px 16px; }
+.hotel-row {
+  display:flex; align-items:flex-start; gap:8px;
+  margin-bottom:9px;
+}
+.hotel-row:last-child { margin-bottom:0; }
+.hotel-row-icon { font-size:15px; flex-shrink:0; margin-top:1px; }
+.hotel-row-text { font-size:12px; color:var(--ink-soft); line-height:1.5; }
+.hotel-row-text strong { color:var(--ink); font-weight:600; }
+.hotel-amenities {
+  display:flex; flex-wrap:wrap; gap:5px; margin-top:10px;
+  padding-top:10px; border-top:1px solid var(--border);
+}
+.amenity {
+  background:var(--sky); border-radius:20px;
+  padding:3px 10px; font-size:10px; font-weight:600;
+  color:var(--ocean); display:inline-flex; gap:4px; align-items:center;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━
+   SCOOTY INFO STRIP
+━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.scooty-strip {
+  margin:14px 14px 0;
+  background:linear-gradient(135deg,#E8F5E9,#C8E6C9);
+  border:1px solid #A5D6A7;
+  border-radius:var(--r-sm);
+  padding:12px 14px;
+  display:flex; align-items:flex-start; gap:10px;
+  animation: slideUp 0.5s 0.05s ease both;
+}
+.scooty-icon { font-size:26px; flex-shrink:0; }
+.scooty-text { font-size:12px; color:#1B5E20; line-height:1.5; }
+.scooty-text strong { font-weight:700; font-size:13px; display:block; margin-bottom:2px; }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━
+   PROGRESS CARD
+━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.prog-section { padding:14px 14px 0; animation: slideUp 0.5s 0.08s ease both; }
+.prog-card {
+  background:var(--white); border-radius:var(--r);
+  box-shadow:var(--shadow-sm); padding:16px 18px;
+}
+.prog-top {
+  display:flex; justify-content:space-between; align-items:flex-start;
+  margin-bottom:10px;
+}
+.prog-title {
+  font-size:11px; font-weight:700; letter-spacing:1.5px;
+  color:var(--muted); text-transform:uppercase; margin-bottom:3px;
+}
+.prog-subtitle { font-size:12px; color:var(--muted); }
+.prog-pct {
+  font-family:'Fraunces',serif;
+  font-size:30px; font-weight:800;
+  color:var(--ocean); line-height:1;
+}
+.prog-track {
+  background:var(--sky); border-radius:100px;
+  height:10px; overflow:hidden; margin-bottom:8px;
+}
+.prog-fill {
+  height:100%; border-radius:100px;
+  background:linear-gradient(90deg,var(--ocean),var(--ocean-lt));
+  transition:width 0.7s cubic-bezier(.4,0,.2,1);
+  position:relative;
+}
+.prog-fill::after {
+  content:''; position:absolute; right:0; top:0; bottom:0; width:16px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.4));
+}
+.prog-stats { display:flex; gap:14px; flex-wrap:wrap; }
+.pstat { display:flex; align-items:center; gap:5px; font-size:11px; color:var(--muted); }
+.pstat-dot { width:7px; height:7px; border-radius:50%; }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━
+   MAP
+━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.map-section { padding:14px 14px 0; animation: slideUp 0.5s 0.1s ease both; }
+.map-card {
+  background:var(--white); border-radius:var(--r);
+  box-shadow:var(--shadow-sm); overflow:hidden;
+}
+.map-hdr {
+  padding:12px 16px; border-bottom:1px solid var(--border);
+  display:flex; align-items:center; gap:8px;
+}
+.map-hdr-title {
+  font-family:'Fraunces',serif;
+  font-size:16px; font-weight:800; color:var(--ink);
+}
+.map-hdr-sub { font-size:11px; color:var(--muted); margin-top:1px; }
+.goa-svg { width:100%; display:block; }
+.map-legend {
+  display:flex; gap:12px; padding:10px 16px;
+  background:var(--sky); flex-wrap:wrap;
+}
+.leg-item {
+  display:flex; align-items:center; gap:5px;
+  font-size:10px; font-weight:600; color:var(--ink-soft);
+}
+.leg-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━
+   DAY CARDS
+━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.days-wrap { padding:14px 14px 0; }
+
+.day-card {
+  background:var(--white); border-radius:var(--r);
+  box-shadow:var(--shadow-sm); margin-bottom:14px;
+  overflow:hidden; animation: slideUp 0.5s ease both;
+}
+.day-card:nth-child(1){animation-delay:0.0s;}
+.day-card:nth-child(2){animation-delay:0.06s;}
+.day-card:nth-child(3){animation-delay:0.12s;}
+.day-card:nth-child(4){animation-delay:0.18s;}
+
+.day-hdr {
+  padding:16px 16px 12px;
+  display:flex; justify-content:space-between; align-items:flex-start;
+}
+.d1 .day-hdr { background:linear-gradient(135deg,#E3F2FD,#BBDEFB); }
+.d2 .day-hdr { background:linear-gradient(135deg,#E8F5E9,#C8E6C9); }
+.d3 .day-hdr { background:linear-gradient(135deg,#FFF3E0,#FFE0B2); }
+.d4 .day-hdr { background:linear-gradient(135deg,#FCE4EC,#F8BBD0); }
+
+.day-num {
+  font-family:'DM Mono',monospace;
+  font-size:10px; font-weight:500; letter-spacing:1.5px;
+  text-transform:uppercase; margin-bottom:3px; opacity:0.7;
+}
+.d1 .day-num { color:var(--ocean); }
+.d2 .day-num { color:var(--palm); }
+.d3 .day-num { color:#E65100; }
+.d4 .day-num { color:#880E4F; }
+
+.day-title {
+  font-family:'Fraunces',serif;
+  font-size:18px; font-weight:800;
+  color:var(--ink); line-height:1.2; margin-bottom:2px;
+}
+.day-date { font-size:11px; color:var(--muted); font-weight:500; }
+.day-emoji { font-size:32px; line-height:1; flex-shrink:0; }
+
+/* Route strip */
+.route-strip {
+  background:rgba(21,101,192,0.05);
+  border-bottom:1px solid var(--border);
+  padding:7px 16px;
+  display:flex; align-items:center; gap:6px;
+  font-size:11px; color:var(--muted); flex-wrap:wrap;
+}
+.route-tag {
+  display:inline-flex; align-items:center; gap:3px;
+  background:var(--sky); border-radius:20px;
+  padding:2px 8px; font-size:10px; font-weight:600;
+  color:var(--ocean);
+}
+
+/* Day mini progress */
+.day-prog-bar {
+  padding:7px 16px;
+  display:flex; align-items:center; gap:8px;
+  border-bottom:1px solid var(--border);
+}
+.day-prog-track {
+  flex:1; height:5px; background:var(--border); border-radius:100px; overflow:hidden;
+}
+.day-prog-fill {
+  height:100%; border-radius:100px; transition:width 0.5s ease;
+}
+.d1 .day-prog-fill { background:var(--ocean-m); }
+.d2 .day-prog-fill { background:var(--palm); }
+.d3 .day-prog-fill { background:var(--coral); }
+.d4 .day-prog-fill { background:#AD1457; }
+.day-prog-lbl { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); white-space:nowrap; }
+
+/* Parent tip */
+.ptip {
+  margin:10px 14px 2px;
+  background:linear-gradient(135deg,#FFFDE7,#FFF9C4);
+  border:1px solid #FDD835;
+  border-radius:var(--r-xs); padding:9px 12px;
+  font-size:11px; color:#F57F17; line-height:1.5;
+  display:flex; gap:7px; align-items:flex-start;
+}
+.ptip-icon { font-size:14px; flex-shrink:0; margin-top:1px; }
+
+/* Places list */
+.places-list { padding:4px 0 10px; }
+
+.place-item {
+  display:flex; align-items:flex-start; gap:10px;
+  padding:11px 16px;
+  border-bottom:1px solid var(--border);
+  cursor:pointer; transition:background 0.15s;
+  position:relative;
+}
+.place-item:last-child { border-bottom:none; }
+.place-item:active { background:rgba(21,101,192,0.03); }
+.place-item.checked { background:rgba(46,125,50,0.04); }
+.place-item.checked .place-name { text-decoration:line-through; color:var(--muted); }
+
+/* Custom checkbox */
+.chk {
+  width:22px; height:22px; border-radius:7px;
+  border:2px solid rgba(21,101,192,0.2);
+  background:var(--white); flex-shrink:0; margin-top:2px;
+  display:flex; align-items:center; justify-content:center;
+  transition:all 0.2s; cursor:pointer; user-select:none;
+}
+.place-item.checked .chk {
+  background:var(--palm); border-color:var(--palm);
+}
+.chk-tick {
+  color:white; font-size:12px; font-weight:700;
+  opacity:0; transform:scale(0.4);
+  transition:all 0.18s cubic-bezier(.4,0,.2,1);
+  user-select:none;
+}
+.place-item.checked .chk-tick { opacity:1; transform:scale(1); }
+
+/* Place icon */
+.place-ico {
+  width:36px; height:36px; border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:17px; flex-shrink:0;
+}
+.ico-beach  { background:#E3F2FD; }
+.ico-fort   { background:#FFF8E1; }
+.ico-market { background:#E8F5E9; }
+.ico-sunset { background:#FFF3E0; }
+.ico-walk   { background:#FCE4EC; }
+.ico-boat   { background:#E0F7FA; }
+.ico-food   { background:#F3E5F5; }
+.ico-bar    { background:#E8EAF6; }
+
+/* Place info */
+.place-info { flex:1; min-width:0; }
+.place-name { font-size:13px; font-weight:700; color:var(--ink); margin-bottom:3px; line-height:1.3; }
+.place-tags { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:3px; }
+.tag {
+  font-size:9px; font-weight:700; letter-spacing:0.3px;
+  border-radius:20px; padding:2px 7px;
+}
+.t-beach  { background:#E3F2FD; color:#0D47A1; }
+.t-fort   { background:#FFF8E1; color:#E65100; }
+.t-mkt    { background:#E8F5E9; color:#1B5E20; }
+.t-kids   { background:#F3E5F5; color:#4A148C; }
+.t-eve    { background:#E8EAF6; color:#1A237E; }
+.t-scenic { background:#FFF3E0; color:#BF360C; }
+.t-boat   { background:#E0F7FA; color:#006064; }
+.t-food   { background:#FCE4EC; color:#880E4F; }
+.t-scooty { background:#F1F8E9; color:#33691E; }
+.place-tip { font-size:10px; color:var(--muted); font-style:italic; line-height:1.4; }
+
+.visited-tag {
+  font-size:9px; font-weight:700; letter-spacing:0.5px;
+  color:var(--palm); background:rgba(46,125,50,0.10);
+  border-radius:20px; padding:2px 8px;
+  flex-shrink:0; align-self:flex-start; margin-top:3px;
+  opacity:0; transition:opacity 0.2s;
+}
+.place-item.checked .visited-tag { opacity:1; }
+
+/* Google Maps button */
+.map-btn {
+  display:inline-flex; align-items:center; gap:4px;
+  background:#E8F0FE; border:1px solid #C5D3F5;
+  border-radius:20px; padding:3px 9px;
+  font-size:10px; font-weight:700; color:#1A73E8;
+  text-decoration:none; flex-shrink:0;
+  margin-top:5px; transition:all 0.18s;
+  cursor:pointer;
+}
+.map-btn:active { background:#C5D3F5; transform:scale(0.96); }
+.map-btn-icon { font-size:11px; }
+
+/* Hotel map link */
+.hotel-map-btn {
+  display:inline-flex; align-items:center; gap:5px;
+  background:#E8F0FE; border:1px solid #C5D3F5;
+  border-radius:20px; padding:5px 13px;
+  font-size:11px; font-weight:700; color:#1A73E8;
+  text-decoration:none; margin-top:10px;
+  transition:all 0.18s; cursor:pointer;
+}
+.hotel-map-btn:active { background:#C5D3F5; }
+
+/* Map header clickable */
+.map-hdr-link {
+  display:inline-flex; align-items:center; gap:5px;
+  background:#E8F0FE; border:1px solid #C5D3F5;
+  border-radius:20px; padding:4px 12px;
+  font-size:10px; font-weight:700; color:#1A73E8;
+  text-decoration:none; margin-left:auto;
+  transition:all 0.18s;
+}
+.map-hdr-link:active { background:#C5D3F5; }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━
+   FOOTER
+━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.site-footer {
+  text-align:center; padding:22px 16px 44px;
+  font-size:11px; color:var(--muted);
+}
+.site-footer .footer-emoji { font-size:22px; margin-bottom:6px; }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━
+   ANIMATIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━ */
+@keyframes slideUp {
+  from { opacity:0; transform:translateY(18px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+</style>
+</head>
+<body>
+
+<!-- ━━━ HERO ━━━ -->
+<header class="hero">
+  <div class="hero-dots">
+    <span></span><span></span><span></span><span></span>
+  </div>
+  <div class="hero-top">
+    <span class="hero-badge">🌴 Goa Trip 2026</span>
+    <button class="reset-btn" onclick="resetAll()">↺ Reset</button>
+  </div>
+  <div class="hero-body">
+    <h1>Goa <em>Family</em><br>Planner</h1>
+    <div class="hero-chips">
+      <span class="hchip">📅 17–21 Oct 2026</span>
+      <span class="hchip">🌊 4 Days</span>
+      <span class="hchip">🛵 By Scooty</span>
+    </div>
+    <div class="kids-row">
+      <span class="kid-pill">👶 1.5-yr girl</span>
+      <span class="kid-pill">🧒 4-yr girl</span>
+    </div>
+  </div>
+  <svg class="hero-wave" viewBox="0 0 430 52" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,28 C100,52 330,4 430,28 L430,52 L0,52 Z" fill="#FFF8E1" opacity="0.3"/>
+    <path d="M0,38 C140,14 290,52 430,38 L430,52 L0,52 Z" fill="#FAFAFA"/>
+  </svg>
+</header>
+
+<!-- ━━━ HOTEL CARD ━━━ -->
+<div class="hotel-section">
+  <div class="hotel-card">
+    <div class="hotel-header">
+      <div class="hotel-icon-wrap">🏠</div>
+      <div>
+        <div class="hotel-name">Phoenix Holiday Home</div>
+        <div class="hotel-stars">★★★ Bed &amp; Breakfast</div>
+      </div>
+    </div>
+    <div class="hotel-body">
+      <div class="hotel-row">
+        <span class="hotel-row-icon">📍</span>
+        <div class="hotel-row-text">
+          <strong>Candolim Beach Road</strong><br>
+          Escrivao Vaddo, Candolim, North Goa – 403515<br>
+          <a class="hotel-map-btn" href="https://maps.google.com/?q=Phoenix+Holiday+Home+Candolim+Goa&ll=15.5189,73.7643" target="_blank" rel="noopener">
+            📍 Open in Google Maps
+          </a>
+        </div>
+      </div>
+      <div class="hotel-row">
+        <span class="hotel-row-icon">📅</span>
+        <div class="hotel-row-text">
+          <strong>Check-in:</strong> 17 Oct 2026 &nbsp;|&nbsp; <strong>Checkout:</strong> 21 Oct 2026 at 4:00 AM
+        </div>
+      </div>
+      <div class="hotel-row">
+        <span class="hotel-row-icon">🏖️</span>
+        <div class="hotel-row-text">6-min walk to Candolim Beach · 1.5 km to Calangute · Fort Aguada 6 km</div>
+      </div>
+      <div class="hotel-amenities">
+        <span class="amenity">🏊 Indoor Pool</span>
+        <span class="amenity">📶 Free WiFi</span>
+        <span class="amenity">❄️ AC Rooms</span>
+        <span class="amenity">🍽️ Restaurant</span>
+        <span class="amenity">🅿️ Parking</span>
+        <span class="amenity">🚗 Car Rental</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━ SCOOTY STRIP ━━━ -->
+<div class="scooty-strip">
+  <div class="scooty-icon">🛵</div>
+  <div class="scooty-text">
+    <strong>All travel by Scooty 🏍️</strong>
+    All locations accessed by scooty from Phoenix Holiday Home. Each day ends with a return ride back to the hotel. Keep a child seat & helmets handy. Tip: Carry Google Maps offline for Goa!
+  </div>
+</div>
+
+<!-- ━━━ PROGRESS ━━━ -->
+<div class="prog-section">
+  <div class="prog-card">
+    <div class="prog-top">
+      <div>
+        <div class="prog-title">Trip Progress</div>
+        <div class="prog-subtitle" id="prog-sub">Start exploring! 🗺️</div>
+      </div>
+      <div class="prog-pct" id="prog-pct">0%</div>
+    </div>
+    <div class="prog-track">
+      <div class="prog-fill" id="prog-fill" style="width:0%"></div>
+    </div>
+    <div class="prog-stats">
+      <div class="pstat"><div class="pstat-dot" style="background:var(--palm)"></div><span id="prog-done">0 visited</span></div>
+      <div class="pstat"><div class="pstat-dot" style="background:#E0E0E0"></div><span id="prog-left">15 remaining</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━ MAP ━━━ -->
+<div class="map-section">
+  <div class="map-card">
+    <div class="map-hdr">
+      <span style="font-size:20px">🗺️</span>
+      <div>
+        <div class="map-hdr-title">Goa Map Overview</div>
+        <div class="map-hdr-sub">North &amp; South Goa · All by 🛵 from Candolim</div>
+      </div>
+      <a class="map-hdr-link" href="https://maps.google.com/?q=Candolim+Beach+Goa" target="_blank" rel="noopener">🗺️ Open Maps</a>
+    </div>
+    <svg class="goa-svg" viewBox="0 0 400 520" xmlns="http://www.w3.org/2000/svg">
+      <rect width="400" height="520" fill="#C8E8F5"/>
+      <!-- North Goa land -->
+      <path d="M75,18 Q118,12 162,20 Q202,26 232,40 Q258,54 268,72 Q278,92 273,118 Q267,144 256,163 Q244,182 232,197 Q216,217 200,227 Q183,237 166,240 Q146,244 130,237 Q115,230 104,216 Q89,198 79,176 Q67,152 63,126 Q57,98 60,68 Q63,42 75,18Z" fill="#A5D6A7"/>
+      <!-- South Goa land -->
+      <path d="M140,243 Q168,240 196,248 Q222,256 240,272 Q255,287 261,307 Q268,328 264,350 Q259,374 248,391 Q236,408 220,420 Q203,432 185,437 Q166,442 150,437 Q132,432 120,419 Q106,404 100,386 Q92,364 94,341 Q97,317 106,296 Q116,274 131,259 Q136,250 140,243Z" fill="#81C784"/>
+      <!-- River Mandovi -->
+      <path d="M160,241 Q165,252 167,264 Q169,276 164,286 Q159,296 153,302" stroke="#5BB0CC" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <!-- Panaji dot -->
+      <circle cx="168" cy="247" r="7" fill="#1565C0" opacity="0.85"/>
+      <text x="179" y="251" font-family="sans-serif" font-size="9" fill="#0D47A1" font-weight="700">Panaji</text>
+
+      <!-- NORTH GOA label -->
+      <rect x="82" y="60" width="110" height="20" rx="4" fill="rgba(21,101,192,0.12)"/>
+      <text x="137" y="74" font-family="sans-serif" font-size="10" fill="#1565C0" font-weight="800" text-anchor="middle">NORTH GOA</text>
+
+      <!-- SOUTH GOA label -->
+      <rect x="105" y="322" width="110" height="20" rx="4" fill="rgba(230,81,0,0.12)"/>
+      <text x="160" y="336" font-family="sans-serif" font-size="10" fill="#BF360C" font-weight="800" text-anchor="middle">SOUTH GOA</text>
+
+      <!-- HOTEL marker -->
+      <polygon points="118,118 124,110 130,118" fill="#FF1744"/>
+      <circle cx="124" cy="110" r="6" fill="#FF1744" stroke="white" stroke-width="1.5"/>
+      <text x="124" y="107" font-family="sans-serif" font-size="7" fill="white" font-weight="800" text-anchor="middle">H</text>
+      <text x="136" y="112" font-family="sans-serif" font-size="8" fill="#B71C1C" font-weight="700">Phoenix Home</text>
+
+      <!-- Day 1 -->
+      <circle cx="118" cy="126" r="5" fill="#1E88E5" stroke="white" stroke-width="1.5"/>
+      <text x="127" y="130" font-family="sans-serif" font-size="8" fill="#0D47A1">Candolim 🏖️</text>
+      <circle cx="103" cy="143" r="5" fill="#F57F17" stroke="white" stroke-width="1.5"/>
+      <text x="112" y="147" font-family="sans-serif" font-size="8" fill="#E65100">Fort Aguada 🏰</text>
+      <circle cx="109" cy="158" r="5" fill="#1E88E5" stroke="white" stroke-width="1.5"/>
+      <text x="118" y="162" font-family="sans-serif" font-size="8" fill="#0D47A1">Sinquerim 🌊</text>
+      <circle cx="148" cy="87" r="5" fill="#8E24AA" stroke="white" stroke-width="1.5"/>
+      <text x="157" y="91" font-family="sans-serif" font-size="8" fill="#4A148C">Baga Beach 🎶</text>
+
+      <!-- Day 2 -->
+      <circle cx="134" cy="98" r="5" fill="#1E88E5" stroke="white" stroke-width="1.5"/>
+      <text x="143" y="102" font-family="sans-serif" font-size="8" fill="#0D47A1">Calangute 🌊</text>
+      <circle cx="152" cy="72" r="5" fill="#2E7D32" stroke="white" stroke-width="1.5"/>
+      <text x="161" y="76" font-family="sans-serif" font-size="8" fill="#1B5E20">Anjuna 🏄</text>
+      <circle cx="177" cy="37" r="5" fill="#F57F17" stroke="white" stroke-width="1.5"/>
+      <text x="186" y="41" font-family="sans-serif" font-size="8" fill="#E65100">Chapora 🏯</text>
+      <circle cx="163" cy="55" r="5" fill="#2E7D32" stroke="white" stroke-width="1.5"/>
+      <text x="172" y="59" font-family="sans-serif" font-size="8" fill="#1B5E20">Vagator 🌅</text>
+
+      <!-- Day 3 South Goa -->
+      <circle cx="136" cy="298" r="5" fill="#E64A19" stroke="white" stroke-width="1.5"/>
+      <text x="145" y="302" font-family="sans-serif" font-size="8" fill="#BF360C">Colva 🐚</text>
+      <circle cx="146" cy="320" r="5" fill="#E64A19" stroke="white" stroke-width="1.5"/>
+      <text x="155" y="324" font-family="sans-serif" font-size="8" fill="#BF360C">Benaulim 🐠</text>
+      <circle cx="163" cy="382" r="5" fill="#F57F17" stroke="white" stroke-width="1.5"/>
+      <text x="172" y="386" font-family="sans-serif" font-size="8" fill="#E65100">Cabo de Rama</text>
+      <circle cx="156" cy="416" r="5" fill="#E64A19" stroke="white" stroke-width="1.5"/>
+      <text x="165" y="420" font-family="sans-serif" font-size="8" fill="#BF360C">Palolem 🌴</text>
+
+      <!-- Compass -->
+      <g transform="translate(358,52)">
+        <circle cx="0" cy="0" r="17" fill="rgba(255,255,255,0.88)" stroke="#CFD8DC" stroke-width="1"/>
+        <text x="0" y="-5" text-anchor="middle" font-size="8" fill="#37474F" font-weight="700">N</text>
+        <text x="0" y="11" text-anchor="middle" font-size="8" fill="#37474F">S</text>
+        <text x="-11" y="3" text-anchor="middle" font-size="8" fill="#37474F">W</text>
+        <text x="11" y="3" text-anchor="middle" font-size="8" fill="#37474F">E</text>
+        <path d="M0,-12 L2,-3 L0,-1 L-2,-3Z" fill="#F44336"/>
+        <path d="M0,12 L2,3 L0,1 L-2,3Z" fill="#9E9E9E"/>
+      </g>
+      <!-- Sea label -->
+      <text x="320" y="210" font-family="sans-serif" font-size="10" fill="#1565C0" opacity="0.6" transform="rotate(-90,320,210)" text-anchor="middle">Arabian Sea</text>
+      <!-- Hotel legend -->
+      <circle cx="20" cy="475" r="6" fill="#FF1744" stroke="white" stroke-width="1.5"/>
+      <text x="30" y="479" font-family="sans-serif" font-size="9" fill="#B71C1C" font-weight="700">= Your Hotel</text>
+    </svg>
+    <div class="map-legend">
+      <div class="leg-item"><div class="leg-dot" style="background:#1E88E5"></div>N.Goa Beach</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#F57F17"></div>Fort</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#E64A19"></div>S.Goa Beach</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#FF1744"></div>Hotel</div>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━ DAY CARDS ━━━━━━━━━ -->
+<div class="days-wrap">
+
+  <!-- ── DAY 1 ── -->
+  <div class="day-card d1" data-day="1">
+    <div class="day-hdr">
+      <div>
+        <div class="day-num">Day 1 · Sat 17 Oct</div>
+        <div class="day-title">Near Candolim 🏖️</div>
+        <div class="day-date">Check-in day · Easy local explore</div>
+      </div>
+      <div class="day-emoji">🌊</div>
+    </div>
+    <div class="route-strip">
+      <span>🛵 Route:</span>
+      <span class="route-tag">🏠 Hotel</span>→
+      <span class="route-tag">🏖️ Candolim</span>→
+      <span class="route-tag">🏰 Aguada</span>→
+      <span class="route-tag">🌊 Sinquerim</span>→
+      <span class="route-tag">🎶 Baga Eve</span>→
+      <span class="route-tag">🏠 Hotel</span>
+    </div>
+    <div class="day-prog-bar">
+      <div class="day-prog-track"><div class="day-prog-fill" id="df1" style="width:0%"></div></div>
+      <span class="day-prog-lbl" id="dl1">0/4</span>
+    </div>
+    <div class="ptip">
+      <span class="ptip-icon">💡</span>
+      <div>Start at Candolim early morning — calm waves perfect for toddlers. Visit Fort Aguada when cooler (4–6 PM). Baga night market is magical for kids! 🎠</div>
+    </div>
+    <div class="places-list">
+      <div class="place-item" data-id="d1p1" onclick="toggle(this)">
+        <div class="chk"><span class="chk-tick">✓</span></div>
+        <div class="place-ico ico-beach">🏖️</div>
+        <div class="place-info">
+          <div class="place-name">Candolim Beach</div>
+          <div class="place-tags"><span class="tag t-beach">Beach</span><span class="tag t-kids">Toddler Safe</span><span class="tag t-scooty">2 min ride</span></div>
+          <div class="place-tip">Calm, clean shore right next to hotel. Shallow gentle waves — perfect for 1.5-yr-old. Build sandcastles & collect shells! 🐚</div>
+          <a class="map-btn" href="https://maps.google.com/?q=Candolim+Beach+Goa" target="_blank" rel="noopener" onclick="event.stopPropagation()"><span class="map-btn-icon">📍</span>Maps</a>
+        </div>
+        <div class="visited-tag">✓ Done</div>
+      </div>
+      <div class="place-item" data-id="d1p2" onclick="toggle(this)">
+        <div class="chk"><span class="chk-tick">✓</span></div>
+        <div class="place-ico ico-fort">🏰</div>
+        <div class="place-info">
+          <div class="place-name">Fort Aguada</div>
+          <div class="place-tags"><span class="tag t-fort">Fort</span><span class="tag t-scenic">Views</span><span class="tag t-scooty">~6 km</span></div>
+          <div class="place-tip">16th-century Portuguese fort with lighthouse & ocean panorama. Easy flat walk for kids. Best at golden hour! 🌅</div>
+          <a class="map-btn" href="https://maps.google.com/?q=Fort+Aguada+Goa" target="_blank" rel="noopener" onclick="event.stopPropagation()"><span class="map-btn-icon">📍</span>Maps</a>
+        </div>
+        <div class="visited-tag">✓ Done</div>
+      </div>
+      <div class="place-item" data-id="d1p3" onclick="toggle(this)">
+        <div class="chk"><span class="chk-tick">✓</span></div>
+        <div class="place-ico ico-beach">🌊</div>
+        <div class="place-info">
+          <div class="place-name">Sinquerim Beach</div>
+          <div class="place-tags"><span class="tag t-beach">Beach</span><span class="tag t-kids">Quiet</span><span class="tag t-scooty">~7 km</span></div>
+          <div class="place-tip">Less crowded neighbour to Fort Aguada. Calm shallow bay — great for toddler water play. Scenic fort backdrop! 🏰</div>
+          <a class="map-btn" href="https://maps.google.com/?q=Sinquerim+Beach+Goa" target="_blank" rel="noopener" onclick="event.stopPropagation()"><span class="map-btn-icon">📍</span>Maps</a>
+        </div>
+        <div class="visited-tag">✓ Done</div>
+      </div>
+      <div class="place-item" data-id="d1p4" onclick="toggle(this)">
+        <div class="chk"><span class="chk-tick">✓</span></div>
+        <div class="place-ico ico-market">🎶</div>
+        <div class="place-info">
+          <div class="place-name">Baga Beach Evening</div>
+          <div class="place-tags"><span class="tag t-mkt">Market</span><span class="tag t-eve">Evening</span><span class="tag t-scooty">~4 km</span></div>
+          <div class="place-tip">Vibrant sunset beach, street food & evening market stalls. Kids love the lights, music & churros! Go after 6 PM. 🌟</div>
+          <a class="map-btn" href="https://maps.google.com/?q=Baga+Beach+Goa" target="_blank" rel="noopener" onclick="event.stopPropagation()"><span class="map-btn-icon">📍</span>Maps</a>
+        </div>
+        <div class="visited-tag">✓ Done</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DAY 2 ── -->
+  <div class="day-card d2" data-day="2">
+    <div class="day-hdr">
+      <div>
+        <div class="day-num">Day 2 · Sun 18 Oct</div>
+        <div class="day-title">North Goa Explore 🌿</div>
+        <div class="day-date">Beaches, Anjuna flea market & forts</div>
+      </div>
+      <div class="day-emoji">🏄</div>
+    </div>
+    <div class="route-strip">
+      <span>🛵 Route:</span>
+      <span class="route-tag">🏠 Hotel</span>→
+      <span class="route-tag">🌊 Calangute</span>→
+      <span class="route-tag">🏄 Anjuna</span>→
+      <span class="route-tag">🏯 Chapora</span>→
+      <span class="route-tag">🌅 Vagator</span>→
+      <span class="route-tag">🏠 Hotel</span>
+    </div>
+    <div class="day-prog-bar">
+      <div class="day-prog-track"><div class="day-prog-fill" id="df2" style="width:0%"></div></div>
+      <span class="day-prog-lbl" id="dl2">0/4</span>
+    </div>
+    <div class="ptip">
+      <span class="ptip-icon">💡</span>
+      <div>Carry baby carrier for Chapora Fort — rocky terrain ahead! Anjuna flea market (Wed only). Pack sunscreen, water & snacks. Start by 8 AM to beat the heat. ☀️</div>
+    </div>
+    <div class="places-list">
+      <div class="place-item" data-id="d2p1" onclick="toggle(this)">
+        <div class="chk"><span class="chk-tick">✓</span></div>
+        <div class="place-ico ico-beach">🌊</div>
+        <div class="place-info">
+          <div class="place-name">Calangute Beach</div>
+          <div class="place-tags"><span class="tag t-beach">Beach</span><span class="tag t-kids">Popular</span><span class="tag t-scooty">~4 km</span></div>
+          <div class="place-tip">Queen of Goa beaches! Wide sandy shore. Arrive early to beat crowds. Lots of shacks with juices & snacks for the kids. 🍹</div>
+          <a class="map-btn" href="https://maps.google.com/?q=Calangute+Beach+Goa" target="_blank" rel="noopener" onclick="event.stopPropagation()"><span class="map-btn-icon">📍</span>Maps</a>
+        </div>
+        <div class="visited-tag">✓ Done</div>
+      </div>
+      <div class="place-item" data-id="d2p2" onclick="toggle(this)">
+        <div class="chk"><span class="chk-tick">✓</span></div>
+        <div class="place-ico ico-beach">🏄</div>
+        <div class="place-info">
+          <div class="place-name">Anjuna Beach</div>
+          <div class="place-tags"><span class="tag t-beach">Beach</span><span class="tag t-mkt">Flea Market</span><span class="tag t-scooty">~9 km</span></div>
+          <div class="place-tip">Famous rocky beach with colourful flea market. Natural tide pools at rocky end — kids love exploring! 🦀 Unique Goa vibes.</div>
+          <a class="map-btn" href="https://maps.google.com/?q=Anjuna+Beach+Goa" target="_blank" rel="noopener" onclick="event.stopPropagation()"><span class="map-btn-icon">📍</span>Maps</a>
+        </div>
+        <div class="visited-tag">✓ Done</div>
+      </div>
+      <div class="place-item" data-id="d2p3" onclick="toggle(this)">
+        <div class="chk"><span class="chk-tick">✓</span></div>
+        <div class="place-ico ico-fort">🏯</div>
+        <div class="place-info">
+          <div class="place-name">Chapora Fort</div>
+          <div class="place-tags"><span class="tag t-fort">Fort</span><span class="tag t-scenic">Scenic</span><span class="tag t-scooty">~12 km</span></div>
+          <div class="place-tip">Iconic "Dil Chahta Hai" fort! 10-min uphill walk — carry the little one. Breathtaking 360° views of North Goa coastline. 🌊</div>
+          <a class="map-btn" href="https://maps.google.com/?q=Chapora+Fort+Goa" target="_blank" rel="noopener" onclick="event.stopPropagation()"><span class="map-btn-icon">📍</span>Maps</a>
+        </div>
+        <div class="visited-tag">✓ Done</div>
+      </div>
+      <div class="place-item" data-id="d2p4" onclick="toggle(this)">
+        <div class="chk"><span class="chk-tick">✓</span></div>
+        <div class="place-ico ico-sunset">🌅</div>
+        <div class="place-info">
+          <div class="place-name">Vagator Beach Sunset</div>
+          <div class="place-tags"><span class="tag t-beach">Beach</span><span class="tag t-scenic">Sunset</span><span class="tag t-scooty">~13 km</span></div>
+          <div class="place-tip">Gorgeous red-cliffed crescent bay. One of Goa's most beautiful sunsets. Kids love the rocky shallows & gentle waves. 🌅</div>
+          <a class="map-btn" href="https://maps.google.com/?q=Vagator+Beach+Goa" target="_blank" rel="noopener" onclick="event.stopPropagation()"><span class="map-btn-icon">📍</span>Maps</a>
+        </div>
+        <div class="visited-tag">✓ Done</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DAY 3 ── -->
+  <div class="day-card d3" data-day="3">
+    <div class="day-hdr">
+      <div>
+        <div class="day-num">Day 3 · Mon 19 Oct</div>
+        <div class="day-title">South Goa Day Trip 🚗</div>
+        <div class="day-date">Serene beaches & ancient fort by scooty</div>
+      </div>
+      <div class="day-emoji">🌴</div>
+    </div>
+    <div class="route-strip">
+      <span>🛵 Route:</span>
+      <span class="route-tag">🏠 Hotel</span>→
+      <span class="route-tag">🐚 Colva</span>→
+      <span class="route-tag">🐠 Benaulim</span>→
+      <span class="route-tag">🏰 Cabo Rama</span>→
+      <span class="route-tag">🌴 Palolem</span>→
+      <span class="route-tag">🏠 Hotel</span>
+    </div>
+    <div class="day-prog-bar">
+      <div class="day-prog-track"><div class="day-prog-fill" id="df3" style="width:0%"></div></div>
+      <span class="day-prog-lbl" id="dl3">0/4</span>
+    </div>
+    <div class="ptip">
+      <span class="ptip-icon">💡</span>
+      <div>Start early — South Goa is ~1.5 hr by scooty. South Goa beaches are far less crowded & have calmer waters — heaven for toddlers! Pack a picnic. 🧺 Return by 7 PM.</div>
+    </div>
+    <div class="places-list">
+      <div class="place-item" data-id="d3p1" onclick="toggle(this)">
+        <div class="chk"><span class="chk-tick">✓</span></div>
+        <div class="place-ico ico-beach">🐚</div>
+        <div class="place-info">
+          <div class="place-name">Colva Beach</div>
+          <div class="place-tags"><span class="tag t-beach">Beach</span><span class="tag t-kids">Kid-Safe</span><span class="tag t-scooty">~40 km</span></div>
+          <div class="place-tip">South Goa's most popular beach — wide, clean & calm. Shallow wading area perfect for toddlers. Fresh seafood shacks nearby! 🦐</div>
+          <a class="map-btn" href="https://maps.google.com/?q=Colva+Beach+Goa" target="_blank" rel="noopener" onclick="event.stopPropagation()"><span class="map-btn-icon">📍</span>Maps</a>
+        </div>
+        <div class="visited-tag">✓ Done</div>
+      </div>
+      <div class="place-item" data-id="d3p2" onclick="toggle(this)">
+        <div class="chk"><span class="chk-tick">✓</span></div>
+        <div class="place-ico ico-beach">🐠</div>
+        <div class="place-info">
+          <div class="place-name">Benaulim Beach</div>
+          <div class="place-tags"><span class="tag t-beach">Beach</span><span class="tag t-kids">Serene</span><span class="tag t-scooty">~42 km</span></div>
+          <div class="place-tip">Tranquil, less-touristy beach. Dolphins often spotted from shore in morning! 🐬 Crystal clear water & white sand.</div>
+          <a class="map-btn" href="https://maps.google.com/?q=Benaulim+Beach+Goa" target="_blank" rel="noopener" onclick="event.stopPropagation()"><span class="map-btn-icon">📍</span>Maps</a>
+        </div>
+        <div class="visited-tag">✓ Done</div>
+      </div>
+      <div class="place-item" data-id="d3p3" onclick="toggle(this)">
+        <div class="chk"><span class="chk-tick">✓</span></div>
+        <div class="place-ico ico-fort">🏰</div>
+        <div class="place-info">
+          <div class="place-name">Cabo de Rama Fort</div>
+          <div class="place-tags"><span class="tag t-fort">Fort</span><span class="tag t-scenic">Clifftop</span><span class="tag t-scooty">~58 km</span></div>
+          <div class="place-tip">Dramatic clifftop fort with sweeping Arabian Sea views. Largely in ruins but utterly breathtaking. Perfect 30-min stop! 🌊</div>
+          <a class="map-btn" href="https://maps.google.com/?q=Cabo+de+Rama+Fort+Goa" target="_blank" rel="noopener" onclick="event.stopPropagation()"><span class="map-btn-icon">📍</span>Maps</a>
+        </div>
+        <div class="visited-tag">✓ Done</div>
+      </div>
+      <div class="place-item" data-id="d3p4" onclick="toggle(this)">
+        <div class="chk"><span class="chk-tick">✓</span></div>
+        <div class="place-ico ico-beach">🌴</div>
+        <div class="place-info">
+          <div class="place-name">Palolem Beach</div>
+          <div class="place-tags"><span class="tag t-beach">Beach</span><span class="tag t-kids">Best for Kids!</span><span class="tag t-scooty">~65 km</span></div>
+          <div class="place-tip">Crescent-shaped paradise with enclosed calm lagoon — Goa's safest beach for toddlers! The shallow bay is absolutely magical. 🌟</div>
+          <a class="map-btn" href="https://maps.google.com/?q=Palolem+Beach+Goa" target="_blank" rel="noopener" onclick="event.stopPropagation()"><span class="map-btn-icon">📍</span>Maps</a>
+        </div>
+        <div class="visited-tag">✓ Done</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DAY 4 ── -->
+  <div class="day-card d4" data-day="4">
+    <div class="day-hdr">
+      <div>
+        <div class="day-num">Day 4 · Tue 20 Oct · Checkout 4 AM</div>
+        <div class="day-title">Relax &amp; Farewell 🌺</div>
+        <div class="day-date">Last morning in Candolim · Checkout at 4:00 AM</div>
+      </div>
+      <div class="day-emoji">🌸</div>
+    </div>
+    <div class="route-strip">
+      <span>🛵 Route:</span>
+      <span class="route-tag">🏠 Hotel</span>→
+      <span class="route-tag">🌅 Beach Walk</span>→
+      <span class="route-tag">🛍️ Market</span>→
+      <span class="route-tag">🍽️ Baga Lunch</span>→
+      <span class="route-tag">🏠 Hotel · Pack</span>
+    </div>
+    <div class="day-prog-bar">
+      <div class="day-prog-track"><div class="day-prog-fill" id="df4" style="width:0%"></div></div>
+      <span class="day-prog-lbl" id="dl4">0/3</span>
+    </div>
+    <div class="ptip">
+      <span class="ptip-icon">💡</span>
+      <div>Light relaxed day before 4 AM checkout. Pack all bags before dinner! Keep kids rested early evening. Candolim sunrise at 6:30 AM is magical. 🌙</div>
+    </div>
+    <div class="places-list">
+      <div class="place-item" data-id="d4p1" onclick="toggle(this)">
+        <div class="chk"><span class="chk-tick">✓</span></div>
+        <div class="place-ico ico-walk">🌅</div>
+        <div class="place-info">
+          <div class="place-name">Candolim Beach Morning Walk</div>
+          <div class="place-tags"><span class="tag t-beach">Morning</span><span class="tag t-kids">Relaxing</span><span class="tag t-scooty">2 min</span></div>
+          <div class="place-tip">Peaceful sunrise stroll. Collect shells, build one last sandcastle, wave to the sea! Pure magic for little ones. 🐚✨</div>
+          <a class="map-btn" href="https://maps.google.com/?q=Candolim+Beach+Goa" target="_blank" rel="noopener" onclick="event.stopPropagation()"><span class="map-btn-icon">📍</span>Maps</a>
+        </div>
+        <div class="visited-tag">✓ Done</div>
+      </div>
+      <div class="place-item" data-id="d4p2" onclick="toggle(this)">
+        <div class="chk"><span class="chk-tick">✓</span></div>
+        <div class="place-ico ico-market">🛍️</div>
+        <div class="place-info">
+          <div class="place-name">Local Market Shopping</div>
+          <div class="place-tags"><span class="tag t-mkt">Shopping</span><span class="tag t-kids">Souvenirs</span><span class="tag t-scooty">~2 km</span></div>
+          <div class="place-tip">Grab cashews, Goan spices, feni & cute handicrafts. Kids love the colourful stalls! Candolim market road has great souvenir shops. 🥜</div>
+          <a class="map-btn" href="https://maps.google.com/?q=Candolim+Market+Goa" target="_blank" rel="noopener" onclick="event.stopPropagation()"><span class="map-btn-icon">📍</span>Maps</a>
+        </div>
+        <div class="visited-tag">✓ Done</div>
+      </div>
+      <div class="place-item" data-id="d4p3" onclick="toggle(this)">
+        <div class="chk"><span class="chk-tick">✓</span></div>
+        <div class="place-ico ico-food">🍽️</div>
+        <div class="place-info">
+          <div class="place-name">Baga Beach Lunch &amp; Stroll</div>
+          <div class="place-tags"><span class="tag t-food">Food</span><span class="tag t-beach">Beach</span><span class="tag t-scooty">~4 km</span></div>
+          <div class="place-tip">Farewell Goan lunch at a Baga beach shack — try fish curry rice & bebinca dessert! Let the kids play one last time on the sand. 🌊</div>
+          <a class="map-btn" href="https://maps.google.com/?q=Baga+Beach+Goa" target="_blank" rel="noopener" onclick="event.stopPropagation()"><span class="map-btn-icon">📍</span>Maps</a>
+        </div>
+        <div class="visited-tag">✓ Done</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /days-wrap -->
+
+<!-- ━━━ FOOTER ━━━ -->
+<div class="site-footer">
+  <div class="footer-emoji">🌴 🌊 🛵 ☀️ 🐬</div>
+  <strong style="color:var(--ocean)">Goa Family Trip · Oct 2026</strong><br>
+  Phoenix Holiday Home, Candolim · North Goa<br>
+  <span style="color:#B0BEC5;font-size:10px;">Made with ❤️ for our little explorers 👶🧒</span>
+</div>
+
+<script>
+const SKEY = 'goa26_v2';
+const DAY_COUNTS = {1:4, 2:4, 3:4, 4:3};
+const TOTAL = 15;
+
+function load(){ try{ return JSON.parse(localStorage.getItem(SKEY)||'{}'); }catch{ return {}; } }
+function save(s){ try{ localStorage.setItem(SKEY,JSON.stringify(s)); }catch{} }
+
+function toggle(el){
+  const id = el.dataset.id;
+  const s = load();
+  s[id] = !s[id];
+  save(s);
+  render(s);
+}
+
+function render(s){
+  let done = 0;
+  document.querySelectorAll('.place-item[data-id]').forEach(el => {
+    el.classList.toggle('checked', !!s[el.dataset.id]);
+    if(s[el.dataset.id]) done++;
+  });
+  for(let d=1;d<=4;d++){
+    const c = DAY_COUNTS[d];
+    let dd = 0;
+    for(let p=1;p<=c;p++) if(s[`d${d}p${p}`]) dd++;
+    const pct = c>0 ? Math.round(dd/c*100) : 0;
+    const f = document.getElementById(`df${d}`);
+    const l = document.getElementById(`dl${d}`);
+    if(f) f.style.width = pct+'%';
+    if(l) l.textContent = `${dd}/${c}`;
+  }
+  const pct = Math.round(done/TOTAL*100);
+  document.getElementById('prog-fill').style.width = pct+'%';
+  document.getElementById('prog-pct').textContent = pct+'%';
+  document.getElementById('prog-done').textContent = `${done} visited`;
+  document.getElementById('prog-left').textContent = `${TOTAL-done} remaining`;
+  const subs = ['Start exploring! 🗺️','Great start! Keep going 🌟','You\'re halfway there 🌊','Almost done — amazing trip! ☀️','You visited everything! 🎉🎊'];
+  const si = pct===0?0:pct<25?1:pct<55?2:pct<100?3:4;
+  document.getElementById('prog-sub').textContent = subs[si];
+}
+
+function resetAll(){
+  if(confirm('Reset all visited places?')){ localStorage.removeItem(SKEY); render({}); }
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{ render(load()); });
+</script>
+</body>
+</html>
