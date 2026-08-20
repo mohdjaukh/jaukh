@@ -1,0 +1,1542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>IronDaily — Beginner Gym Tracker</title>
+<style>
+/* ============================================================
+   IRONDAILY — Beginner Gym Workout Tracker
+   Single-file offline app. HTML + CSS + Vanilla JS only.
+   Design tokens:
+     bg:#0D0D10  surface:#17171C  surface-2:#1F1F27  border:#2B2B34
+     accent (power/gold):#F2B705   accent-2 (progress/green):#22C58B
+     danger:#FF5C5C   warn:#FF9A3D   text:#F2F1ED  text-dim:#9C9CA8
+   Signature element: circular "plate" progress dial on Home showing
+   today's session load (used for training-week + duration at a glance).
+   ============================================================ */
+:root{
+  --bg:#0D0D10;
+  --bg-elevated:#141418;
+  --surface:#17171C;
+  --surface-2:#1F1F27;
+  --border:#2B2B34;
+  --text:#F2F1ED;
+  --text-dim:#9C9CA8;
+  --text-faint:#65656F;
+  --accent:#F2B705;
+  --accent-ink:#1A1400;
+  --accent-2:#22C58B;
+  --danger:#FF5C5C;
+  --warn:#FF9A3D;
+  --radius-lg:20px;
+  --radius-md:14px;
+  --radius-sm:10px;
+  --nav-h:78px;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+.display{
+  font-family:"Arial Black","Helvetica Neue",Arial,sans-serif;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:0.02em;
+}
+#app-shell{
+  max-width:480px;
+  margin:0 auto;
+  min-height:100vh;
+  background:var(--bg);
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  box-shadow:0 0 60px rgba(0,0,0,0.6);
+}
+#view-root{
+  flex:1;
+  padding:18px 16px calc(var(--nav-h) + 24px) 16px;
+  overflow-y:auto;
+}
+.view{display:none;}
+.view.active{display:block; animation:fadeIn .25s ease;}
+@keyframes fadeIn{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+/* ---- top bar ---- */
+.top-bar{
+  padding:18px 16px 4px 16px;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.top-bar .brand{
+  font-size:15px; letter-spacing:0.18em;
+}
+.top-bar .brand span{color:var(--accent);}
+.top-bar .date-chip{
+  font-size:11px; color:var(--text-dim);
+  background:var(--surface); border:1px solid var(--border);
+  padding:6px 10px; border-radius:999px;
+}
+
+/* ---- cards ---- */
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:18px;
+  margin-bottom:14px;
+}
+.card.tight{padding:14px;}
+.eyebrow{
+  font-size:11px; letter-spacing:0.16em; color:var(--text-faint);
+  text-transform:uppercase; margin-bottom:6px; font-weight:700;
+}
+.card h2{margin:0 0 4px 0; font-size:22px;}
+.card p.sub{margin:0; color:var(--text-dim); font-size:13.5px; line-height:1.5;}
+
+/* ---- buttons ---- */
+button{font-family:inherit; cursor:pointer;}
+.btn{
+  width:100%; border:none; border-radius:var(--radius-md);
+  padding:16px; font-size:15px; font-weight:800; letter-spacing:0.03em;
+  text-transform:uppercase; transition:transform .12s ease, opacity .12s ease;
+}
+.btn:active{transform:scale(0.98);}
+.btn-primary{background:var(--accent); color:var(--accent-ink);}
+.btn-secondary{background:var(--surface-2); color:var(--text); border:1px solid var(--border);}
+.btn-ghost{background:transparent; color:var(--text-dim); border:1px solid var(--border);}
+.btn-danger{background:var(--danger); color:#2a0000;}
+.btn-success{background:var(--accent-2); color:#062015;}
+.btn-sm{padding:10px 14px; font-size:12.5px; border-radius:999px; width:auto;}
+.btn-row{display:flex; gap:10px;}
+.btn-row .btn{flex:1;}
+.link-btn{background:none; border:none; color:var(--accent); font-weight:700; font-size:13px; padding:6px 0;}
+
+/* ---- dial (signature element) ---- */
+.dial-wrap{display:flex; align-items:center; gap:18px;}
+.dial{width:104px; height:104px; flex:none; position:relative;}
+.dial svg{transform:rotate(-90deg);}
+.dial .dial-label{
+  position:absolute; inset:0; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+}
+.dial .dial-num{font-size:24px; font-weight:900;}
+.dial .dial-txt{font-size:9px; color:var(--text-dim); letter-spacing:.08em; text-transform:uppercase;}
+
+/* ---- stat grid ---- */
+.stat-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;}
+.stat-box{background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius-sm); padding:12px;}
+.stat-box .num{font-size:20px; font-weight:900;}
+.stat-box .lbl{font-size:10.5px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.06em;}
+
+/* ---- pills / status ---- */
+.pill{display:inline-block; padding:4px 10px; border-radius:999px; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.04em;}
+.pill-pending{background:rgba(242,183,5,0.15); color:var(--accent);}
+.pill-done{background:rgba(34,197,139,0.15); color:var(--accent-2);}
+.pill-rest{background:rgba(156,156,168,0.15); color:var(--text-dim);}
+.pill-warn{background:rgba(255,92,92,0.15); color:var(--danger);}
+
+/* ---- lists ---- */
+.simple-list{list-style:none; margin:0; padding:0;}
+.simple-list li{
+  display:flex; align-items:center; gap:10px;
+  padding:10px 0; border-bottom:1px solid var(--border); font-size:14px;
+}
+.simple-list li:last-child{border-bottom:none;}
+.simple-list .dot{width:6px; height:6px; border-radius:50%; background:var(--accent); flex:none;}
+.check-list{list-style:none; margin:0; padding:0;}
+.check-list li{
+  display:flex; align-items:flex-start; gap:10px; padding:10px 12px;
+  background:var(--surface-2); border:1px solid var(--border);
+  border-radius:var(--radius-sm); margin-bottom:8px; font-size:13.5px;
+}
+.check-list li input{margin-top:2px;}
+
+/* ---- exercise flow ---- */
+.ex-progress-track{height:5px; background:var(--surface-2); border-radius:999px; overflow:hidden; margin-bottom:14px;}
+.ex-progress-fill{height:100%; background:var(--accent); border-radius:999px; transition:width .3s ease;}
+.ex-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;}
+.ex-head .exno{font-size:11px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.1em;}
+.ex-name{font-size:24px; margin:2px 0 2px 0;}
+.ex-target{color:var(--accent); font-size:13px; font-weight:700; margin-bottom:14px;}
+.set-badge{
+  display:inline-flex; align-items:center; justify-content:center;
+  background:var(--surface-2); border:1px solid var(--border);
+  border-radius:999px; padding:6px 14px; font-size:13px; font-weight:800; margin-bottom:14px;
+}
+.field-row{display:flex; gap:10px; margin-bottom:12px;}
+.field{flex:1;}
+.field label{display:block; font-size:11px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px;}
+.field input[type=number], .field input[type=text]{
+  width:100%; background:var(--surface-2); border:1px solid var(--border);
+  color:var(--text); border-radius:var(--radius-sm); padding:14px; font-size:17px; font-weight:700;
+}
+.prev-note{font-size:12px; color:var(--text-faint); margin:-6px 0 12px 0;}
+.diff-grid{display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:14px;}
+.diff-btn{
+  padding:12px 8px; border-radius:var(--radius-sm); border:1px solid var(--border);
+  background:var(--surface-2); color:var(--text); font-weight:700; font-size:13px;
+}
+.diff-btn.active[data-d="Easy"]{background:rgba(34,197,139,0.18); border-color:var(--accent-2); color:var(--accent-2);}
+.diff-btn.active[data-d="Good"]{background:rgba(242,183,5,0.18); border-color:var(--accent); color:var(--accent);}
+.diff-btn.active[data-d="Hard"]{background:rgba(255,154,61,0.18); border-color:var(--warn); color:var(--warn);}
+.diff-btn.active[data-d="Very Hard"]{background:rgba(255,92,92,0.18); border-color:var(--danger); color:var(--danger);}
+.pain-check-row{display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--text-dim); margin:-4px 0 14px 0;}
+
+/* ---- rest timer ---- */
+.timer-wrap{text-align:center; padding:20px 0 8px 0;}
+.timer-big{font-size:64px; font-weight:900; letter-spacing:.02em; margin:6px 0;}
+.timer-sub{color:var(--text-dim); font-size:13px; text-transform:uppercase; letter-spacing:.1em;}
+
+/* ---- modal ---- */
+.modal-overlay{
+  position:fixed; inset:0; background:rgba(0,0,0,0.65);
+  display:flex; align-items:flex-end; justify-content:center; z-index:50;
+}
+.modal{
+  width:100%; max-width:480px; max-height:86vh; overflow-y:auto;
+  background:var(--bg-elevated); border:1px solid var(--border);
+  border-radius:24px 24px 0 0; padding:22px 18px calc(22px + env(safe-area-inset-bottom));
+}
+.modal-handle{width:40px; height:4px; background:var(--border); border-radius:99px; margin:0 auto 16px auto;}
+.modal h3{margin:0 0 12px 0; font-size:19px;}
+
+/* ---- option grid (pain check etc) ---- */
+.opt-list{display:flex; flex-direction:column; gap:10px; margin-bottom:6px;}
+.opt-card{
+  width:100%; text-align:left; background:var(--surface-2); border:1px solid var(--border);
+  border-radius:var(--radius-md); padding:14px 16px; color:var(--text);
+}
+.opt-card b{display:block; font-size:14.5px; margin-bottom:3px;}
+.opt-card span{font-size:12px; color:var(--text-dim);}
+.opt-card.danger{border-color:var(--danger);}
+
+/* ---- calendar ---- */
+.cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:6px;}
+.cal-dow{font-size:10px; text-align:center; color:var(--text-faint); text-transform:uppercase; padding-bottom:4px;}
+.cal-cell{
+  aspect-ratio:1; display:flex; align-items:center; justify-content:center;
+  border-radius:10px; font-size:12.5px; font-weight:700; background:var(--surface-2);
+  border:1px solid var(--border); color:var(--text-dim); position:relative;
+}
+.cal-cell.today{border-color:var(--accent); color:var(--text);}
+.cal-cell.completed{background:rgba(34,197,139,0.18); color:var(--accent-2); border-color:transparent;}
+.cal-cell.recovery{background:rgba(255,154,61,0.16); color:var(--warn); border-color:transparent;}
+.cal-cell.rest{background:rgba(156,156,168,0.1); color:var(--text-dim);}
+.cal-cell.skipped{background:rgba(255,92,92,0.14); color:var(--danger); border-color:transparent;}
+.cal-cell.empty{background:transparent; border:none;}
+.legend{display:flex; flex-wrap:wrap; gap:12px; margin-top:12px;}
+.legend-item{display:flex; align-items:center; gap:6px; font-size:11px; color:var(--text-dim);}
+.legend-dot{width:9px; height:9px; border-radius:3px;}
+
+/* ---- bars ---- */
+.bar-row{display:flex; align-items:center; gap:10px; margin-bottom:8px;}
+.bar-row .bar-lbl{width:34px; font-size:11px; color:var(--text-dim);}
+.bar-track{flex:1; height:10px; background:var(--surface-2); border-radius:99px; overflow:hidden;}
+.bar-fill{height:100%; background:linear-gradient(90deg, var(--accent), var(--accent-2)); border-radius:99px; transition:width .4s ease;}
+.bar-row .bar-val{width:22px; text-align:right; font-size:11px; color:var(--text-faint);}
+
+/* ---- progress compare ---- */
+.compare-row{display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border);}
+.compare-row:last-child{border-bottom:none;}
+.compare-row .exname{font-size:13.5px; font-weight:700;}
+.compare-row .delta{font-size:12px; font-weight:800;}
+.delta.up{color:var(--accent-2);}
+.delta.flat{color:var(--text-dim);}
+
+/* ---- form ---- */
+.form-group{margin-bottom:14px;}
+.form-group label{display:block; font-size:11px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px;}
+.form-group input, .form-group select{
+  width:100%; background:var(--surface-2); border:1px solid var(--border);
+  color:var(--text); border-radius:var(--radius-sm); padding:12px 14px; font-size:14.5px;
+}
+.toggle-row{display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid var(--border);}
+.toggle-row:last-child{border-bottom:none;}
+.switch{position:relative; width:46px; height:26px; flex:none;}
+.switch input{opacity:0; width:0; height:0;}
+.switch .track{position:absolute; inset:0; background:var(--surface-2); border:1px solid var(--border); border-radius:99px; transition:.2s;}
+.switch .knob{position:absolute; top:3px; left:3px; width:18px; height:18px; border-radius:50%; background:var(--text-dim); transition:.2s;}
+.switch input:checked + .track{background:rgba(242,183,5,0.3); border-color:var(--accent);}
+.switch input:checked + .track .knob{transform:translateX(20px); background:var(--accent);}
+
+/* ---- water tracker ---- */
+.water-visual{display:flex; align-items:center; gap:14px; margin:8px 0 14px 0;}
+.water-bottle{width:44px; height:80px; border:2px solid var(--border); border-radius:10px 10px 4px 4px; position:relative; overflow:hidden; background:var(--surface-2); flex:none;}
+.water-fill{position:absolute; bottom:0; left:0; right:0; background:linear-gradient(180deg, #4FC3E8, #1E8FB5); transition:height .3s ease;}
+
+/* ---- bottom nav ---- */
+.bottom-nav{
+  position:fixed; bottom:0; left:50%; transform:translateX(-50%);
+  width:100%; max-width:480px; height:var(--nav-h);
+  background:var(--bg-elevated); border-top:1px solid var(--border);
+  display:flex; padding-bottom:env(safe-area-inset-bottom);
+  z-index:40;
+}
+.nav-btn{
+  flex:1; background:none; border:none; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:4px; color:var(--text-faint);
+  font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.03em;
+}
+.nav-btn .ic{font-size:20px; line-height:1;}
+.nav-btn.active{color:var(--accent);}
+
+/* ---- toast ---- */
+#toast{
+  position:fixed; bottom:calc(var(--nav-h) + 14px); left:50%; transform:translateX(-50%) translateY(20px);
+  background:var(--surface-2); border:1px solid var(--border); color:var(--text);
+  padding:12px 18px; border-radius:999px; font-size:13px; font-weight:600;
+  opacity:0; pointer-events:none; transition:.25s ease; z-index:60; max-width:90%; text-align:center;
+}
+#toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+.disclaimer{font-size:11px; color:var(--text-faint); line-height:1.5; margin-top:4px;}
+.divider{height:1px; background:var(--border); margin:14px 0;}
+hr.hair{border:none; border-top:1px solid var(--border); margin:14px 0;}
+.empty-state{text-align:center; padding:30px 10px; color:var(--text-dim);}
+.empty-state .big{font-size:34px; margin-bottom:8px;}
+::-webkit-scrollbar{width:0; height:0;}
+</style>
+</head>
+<body>
+<div id="app-shell">
+
+  <header class="top-bar">
+    <div class="brand display">IRON<span>DAILY</span></div>
+    <div class="date-chip" id="topDateChip">—</div>
+  </header>
+
+  <main id="view-root">
+
+    <!-- HOME -->
+    <section class="view active" id="view-home"></section>
+
+    <!-- WORKOUT -->
+    <section class="view" id="view-workout"></section>
+
+    <!-- PROGRESS -->
+    <section class="view" id="view-progress"></section>
+
+    <!-- HISTORY -->
+    <section class="view" id="view-history"></section>
+
+    <!-- SETTINGS -->
+    <section class="view" id="view-settings"></section>
+
+  </main>
+
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-view="home"><span class="ic">🏠</span>Home</button>
+    <button class="nav-btn" data-view="workout"><span class="ic">🏋️</span>Workout</button>
+    <button class="nav-btn" data-view="progress"><span class="ic">📈</span>Progress</button>
+    <button class="nav-btn" data-view="history"><span class="ic">🗓️</span>History</button>
+    <button class="nav-btn" data-view="settings"><span class="ic">⚙️</span>Settings</button>
+  </nav>
+</div>
+
+<div id="modal-root"></div>
+<div id="toast"></div>
+
+<script>
+/* ============================================================
+   DATA: EXERCISE LIBRARY
+   ============================================================ */
+const EXLIB = {
+  chest_press:{name:"Machine Chest Press", target:"Chest",
+    how:["Adjust the seat so the handles sit at chest height.","Keep your back flat against the pad and feet planted.","Push the handles forward until your arms extend.","Return slowly to the starting position."],
+    breathing:{exhale:"Exhale as you push the handles forward.", inhale:"Inhale as you return to the start."},
+    mistakes:["Loading too much weight too soon","Shrugging the shoulders up toward the ears","Rushing the return phase","Locking the elbows hard at the top"]},
+  incline_db_press:{name:"Incline Dumbbell Press", target:"Upper Chest",
+    how:["Set the bench to a 30–45° incline.","Hold dumbbells at shoulder level, palms facing forward.","Press up until your arms are extended.","Lower with control back to shoulder level."],
+    breathing:{exhale:"Exhale while pressing up.", inhale:"Inhale while lowering."},
+    mistakes:["Flaring the elbows too wide","Arching the lower back excessively","Bouncing the dumbbells off the chest"]},
+  pec_deck:{name:"Pec Deck / Chest Fly Machine", target:"Chest",
+    how:["Sit tall with your back against the pad.","Grip the handles with a slight bend in the elbows.","Bring the handles together in front of your chest.","Open back out slowly to the start."],
+    breathing:{exhale:"Exhale as the handles come together.", inhale:"Inhale as you open back up."},
+    mistakes:["Using momentum to swing the arms","Overstretching the shoulders on the way back","Setting the seat too low"]},
+  triceps_pushdown:{name:"Cable Triceps Pushdown", target:"Triceps",
+    how:["Stand tall with elbows tucked to your sides.","Grip the bar with hands shoulder-width apart.","Push down until your arms are fully extended.","Return slowly, keeping the elbows fixed."],
+    breathing:{exhale:"Exhale as you push down.", inhale:"Inhale as you return up."},
+    mistakes:["Letting the elbows drift forward","Using body weight to force the movement","Not fully controlling the return"]},
+  overhead_triceps:{name:"Overhead Triceps Extension", target:"Triceps",
+    how:["Hold a dumbbell with both hands overhead.","Keep the elbows close to your head.","Lower the weight slowly behind your head.","Extend back up to the start."],
+    breathing:{exhale:"Exhale as you extend up.", inhale:"Inhale as you lower behind the head."},
+    mistakes:["Flaring the elbows outward","Using a weight too heavy to control","Arching the back for momentum"]},
+  lat_pulldown:{name:"Lat Pulldown", target:"Back",
+    how:["Grip the bar wider than shoulder-width.","Sit tall and brace your core.","Pull the bar down to your upper chest.","Slowly extend your arms back up."],
+    breathing:{exhale:"Exhale as you pull the bar down.", inhale:"Inhale as you extend up."},
+    mistakes:["Leaning back excessively","Using momentum to yank the bar down","Not fully controlling the return"]},
+  seated_row:{name:"Seated Cable Row", target:"Back",
+    how:["Sit with a slight bend in the knees, back straight.","Grip the handle and pull it toward your torso.","Squeeze your shoulder blades together at the end.","Extend your arms back forward with control."],
+    breathing:{exhale:"Exhale as you pull toward the torso.", inhale:"Inhale as you extend forward."},
+    mistakes:["Rounding the lower back","Using only the arms without engaging the back","Jerking the weight with momentum"]},
+  chest_supported_row:{name:"Chest Supported Row", target:"Back",
+    how:["Rest your chest firmly on the support pad.","Grip the handles and pull your elbows back.","Squeeze the shoulder blades together.","Lower with control back to the start."],
+    breathing:{exhale:"Exhale as you pull back.", inhale:"Inhale as you lower."},
+    mistakes:["Lifting the chest off the pad","Using a jerky, fast tempo","Shrugging instead of squeezing the back"]},
+  db_curl:{name:"Dumbbell Biceps Curl", target:"Biceps",
+    how:["Stand tall with dumbbells at your sides.","Keep your elbows close to your torso.","Curl the weights up toward your shoulders.","Lower slowly back to the start."],
+    breathing:{exhale:"Exhale as you curl up.", inhale:"Inhale as you lower down."},
+    mistakes:["Swinging the body for momentum","Letting the elbows drift forward","Rushing the lowering phase"]},
+  hammer_curl:{name:"Hammer Curl", target:"Biceps & Forearms",
+    how:["Hold dumbbells with palms facing each other.","Keep your elbows fixed at your sides.","Curl straight up without rotating the wrist.","Lower with control back to the start."],
+    breathing:{exhale:"Exhale as you curl up.", inhale:"Inhale as you lower."},
+    mistakes:["Swinging the shoulders for momentum","Letting the elbows flare out","Using too heavy a weight for form"]},
+  leg_press:{name:"Leg Press", target:"Quads & Glutes",
+    how:["Place feet shoulder-width apart on the platform.","Lower the platform under control.","Stop before your lower back lifts off the pad.","Press back up without locking the knees hard."],
+    breathing:{exhale:"Exhale as you press up.", inhale:"Inhale as you lower down."},
+    mistakes:["Lowering too far and rounding the lower back","Locking the knees aggressively at the top","Placing the feet too high or too low"]},
+  leg_extension:{name:"Leg Extension", target:"Quads",
+    how:["Sit with the pad resting on your lower shins.","Extend your legs until almost straight.","Pause briefly at the top.","Lower slowly back to the start."],
+    breathing:{exhale:"Exhale as you extend.", inhale:"Inhale as you lower."},
+    mistakes:["Using a jerky kicking motion","Locking the knees hard at the top","Choosing a weight too heavy to control"]},
+  leg_curl:{name:"Seated or Lying Leg Curl", target:"Hamstrings",
+    how:["Position the pad just above your heels.","Curl the weight by bending your knees.","Squeeze the hamstrings at the top.","Lower back to the start with control."],
+    breathing:{exhale:"Exhale as you curl.", inhale:"Inhale as you release."},
+    mistakes:["Lifting the hips off the seat or bench","Using momentum instead of a controlled squeeze","Releasing the weight too quickly"]},
+  goblet_squat:{name:"Bodyweight or Goblet Squat", target:"Quads & Glutes",
+    how:["Stand with feet shoulder-width apart.","If using a weight, hold it close to your chest.","Sit back and down, keeping your chest up.","Push through your heels back to standing."],
+    breathing:{exhale:"Exhale as you stand up.", inhale:"Inhale as you lower down."},
+    mistakes:["Letting the knees cave inward","Rounding the lower back","Rising onto the toes instead of pushing through the heels"]},
+  calf_raise:{name:"Standing Calf Raise", target:"Calves",
+    how:["Stand tall with feet hip-width apart.","Rise up onto the balls of your feet.","Pause briefly at the top.","Lower slowly back down."],
+    breathing:{exhale:"Exhale as you rise up.", inhale:"Inhale as you lower."},
+    mistakes:["Bouncing quickly instead of controlling the tempo","Using a very short range of motion","Rolling the ankles outward"]},
+  shoulder_press:{name:"Machine Shoulder Press", target:"Shoulders",
+    how:["Adjust the seat so handles are level with your shoulders.","Press the handles upward until arms extend.","Avoid locking the elbows hard at the top.","Lower slowly back to shoulder level."],
+    breathing:{exhale:"Exhale as you press up.", inhale:"Inhale as you lower."},
+    mistakes:["Arching the lower back","Using momentum from the legs","Pressing too fast without control"]},
+  lateral_raise:{name:"Dumbbell Lateral Raise", target:"Side Shoulders",
+    how:["Hold light dumbbells at your sides.","Raise your arms out to shoulder height.","Keep a slight bend in the elbows.","Lower slowly back down."],
+    breathing:{exhale:"Exhale as you raise the arms.", inhale:"Inhale as you lower."},
+    mistakes:["Using momentum to swing the weights up","Raising the arms above shoulder height","Shrugging the shoulders toward the ears"]},
+  rear_delt_fly:{name:"Rear Delt Fly Machine", target:"Rear Shoulders",
+    how:["Sit facing the pad with a slight bend in the elbows.","Pull the handles out and back.","Squeeze the rear shoulders together.","Return slowly to the start."],
+    breathing:{exhale:"Exhale as you pull back.", inhale:"Inhale as you return."},
+    mistakes:["Using too much weight and losing form","Jerking the handles with momentum","Not squeezing at the peak of the movement"]},
+  face_pull:{name:"Face Pull", target:"Rear Shoulders & Upper Back",
+    how:["Set the cable at upper chest to head height.","Pull the rope toward your face, elbows high.","Squeeze the shoulder blades together.","Return slowly to the start."],
+    breathing:{exhale:"Exhale as you pull toward the face.", inhale:"Inhale as you return."},
+    mistakes:["Pulling with the arms only, not the back","Letting the elbows drop too low","Using a weight too heavy to control"]},
+  plank:{name:"Plank", target:"Core", isHold:true,
+    how:["Rest on your forearms and toes.","Keep your body in a straight line.","Brace your core and squeeze your glutes.","Hold the position for the set time."],
+    breathing:{exhale:"Breathe steadily and evenly throughout.", inhale:"Avoid holding your breath."},
+    mistakes:["Letting the hips sag down","Raising the hips too high","Holding the breath"]},
+  crunches:{name:"Crunches", target:"Core (Abs)",
+    how:["Lie on your back with knees bent.","Place hands lightly behind your head.","Curl your shoulders up toward your knees.","Lower back down with control."],
+    breathing:{exhale:"Exhale as you curl up.", inhale:"Inhale as you lower."},
+    mistakes:["Pulling on the neck with your hands","Using momentum to jerk upward","Moving too fast through the set"]}
+};
+
+/* ============================================================
+   DATA: WEEKLY PLAN — keyed to Date().getDay() (0=Sun..6=Sat)
+   ============================================================ */
+const DAY_PLANS = {
+  1:{ key:"mon", name:"Monday", type:"workout", muscle:"Chest + Triceps",
+      warmup:["Treadmill Walk – 5 to 10 minutes","Arm Circles – 2 sets × 15 reps","Light chest warm-up set on the press machine"],
+      exercises:[
+        {ex:"chest_press", sets:3, reps:"10–12", rest:75},
+        {ex:"incline_db_press", sets:3, reps:"10", rest:75},
+        {ex:"pec_deck", sets:3, reps:"12", rest:75},
+        {ex:"triceps_pushdown", sets:3, reps:"12", rest:75},
+        {ex:"overhead_triceps", sets:3, reps:"10–12", rest:75}],
+      cooldown:["Chest & shoulder stretch – 30 seconds per side","Triceps overhead stretch – 30 seconds per side","Slow deep breathing – 1 to 2 minutes"] },
+  2:{ key:"tue", name:"Tuesday", type:"workout", muscle:"Back + Biceps",
+      warmup:["Treadmill or Cycle – 5 to 10 minutes","Shoulder mobility circles – 2 sets × 10 reps"],
+      exercises:[
+        {ex:"lat_pulldown", sets:3, reps:"10–12", rest:75},
+        {ex:"seated_row", sets:3, reps:"10–12", rest:75},
+        {ex:"chest_supported_row", sets:3, reps:"10", rest:75},
+        {ex:"db_curl", sets:3, reps:"10–12", rest:75},
+        {ex:"hammer_curl", sets:3, reps:"10–12", rest:75}],
+      cooldown:["Lat stretch – 30 seconds per side","Biceps stretch – 30 seconds per side","Slow deep breathing – 1 to 2 minutes"] },
+  3:{ key:"wed", name:"Wednesday", type:"workout", muscle:"Legs",
+      warmup:["Cycle – 5 to 10 minutes","Bodyweight Squats – 2 sets × 10 reps"],
+      exercises:[
+        {ex:"leg_press", sets:3, reps:"10–12", rest:75},
+        {ex:"leg_extension", sets:3, reps:"12", rest:75},
+        {ex:"leg_curl", sets:3, reps:"12", rest:75},
+        {ex:"goblet_squat", sets:3, reps:"10", rest:75},
+        {ex:"calf_raise", sets:3, reps:"15", rest:75}],
+      cooldown:["Quad stretch – 30 seconds per side","Hamstring stretch – 30 seconds per side","Calf stretch – 30 seconds per side"],
+      note:"Keep squats light to moderate — heavy squats and heavy deadlifts are not recommended this early." },
+  4:{ key:"thu", name:"Thursday", type:"workout", muscle:"Shoulders + Core",
+      warmup:["Treadmill – 5 minutes","Shoulder rotation and mobility – 2 sets × 10 reps"],
+      exercises:[
+        {ex:"shoulder_press", sets:3, reps:"10–12", rest:75},
+        {ex:"lateral_raise", sets:3, reps:"12–15", rest:75},
+        {ex:"rear_delt_fly", sets:3, reps:"12", rest:75},
+        {ex:"face_pull", sets:3, reps:"12–15", rest:75},
+        {ex:"plank", sets:3, reps:"20–30 sec", rest:60},
+        {ex:"crunches", sets:3, reps:"12–15", rest:60}],
+      cooldown:["Shoulder cross-body stretch – 30 seconds per side","Child's pose for core & lower back – 30 to 45 seconds","Slow deep breathing – 1 to 2 minutes"] },
+  5:{ key:"fri", name:"Friday", type:"workout", muscle:"Full Body (Light)",
+      warmup:["Treadmill Walk – 5 minutes","Light dynamic full-body movements – 2 to 3 minutes"],
+      exercises:[
+        {ex:"chest_press", sets:2, reps:"12", rest:60},
+        {ex:"lat_pulldown", sets:2, reps:"12", rest:60},
+        {ex:"leg_press", sets:2, reps:"12", rest:60},
+        {ex:"shoulder_press", sets:2, reps:"12", rest:60},
+        {ex:"db_curl", sets:2, reps:"12", rest:60},
+        {ex:"triceps_pushdown", sets:2, reps:"12", rest:60}],
+      cooldown:["Full-body stretch flow – 3 to 5 minutes","Slow deep breathing – 1 to 2 minutes"],
+      note:"Use light to moderate weight throughout today's session." },
+  6:{ key:"sat", name:"Saturday", type:"cardio", muscle:"Cardio + Mobility",
+      cardioOptions:["Treadmill Walking – 20 to 30 minutes","Stationary Cycle – 20 to 30 minutes","Elliptical – 15 to 20 minutes"],
+      mobility:"Add 10 to 15 minutes of full-body mobility and gentle stretching." },
+  0:{ key:"sun", name:"Sunday", type:"rest", muscle:"Rest & Recovery" }
+};
+
+/* ============================================================
+   STORAGE HELPERS
+   ============================================================ */
+const LS = {
+  get(key, fallback){ try{ const v = localStorage.getItem(key); return v===null ? fallback : JSON.parse(v);}catch(e){return fallback;} },
+  set(key, val){ try{ localStorage.setItem(key, JSON.stringify(val)); }catch(e){ console.error("Storage error", e);} }
+};
+const K = {
+  settings:"gwt_settings", logs:"gwt_logs", prs:"gwt_prs", water:"gwt_water",
+  waterGoal:"gwt_water_goal", body:"gwt_body", dayStatus:"gwt_daystatus"
+};
+
+function defaultSettings(){
+  return {
+    name:"Mohd", level:"Beginner",
+    goal:"General fitness, muscle building, strength & fat loss",
+    days:6, restDefault:75, unit:"KG", sound:true, notifications:true,
+    startDate: todayKey()
+  };
+}
+function getSettings(){
+  let s = LS.get(K.settings, null);
+  if(!s){ s = defaultSettings(); LS.set(K.settings, s); }
+  return s;
+}
+function saveSettings(s){ LS.set(K.settings, s); }
+
+function todayKey(d){ d = d || new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+
+function getLogs(){ return LS.get(K.logs, []); }
+function addLog(entry){ const l = getLogs(); l.push(entry); LS.set(K.logs, l); }
+
+function getPRs(){ return LS.get(K.prs, {}); }
+function savePRs(p){ LS.set(K.prs, p); }
+
+function getDayStatusMap(){ return LS.get(K.dayStatus, {}); }
+function setDayStatus(dateKey, status, extra){
+  const m = getDayStatusMap();
+  m[dateKey] = Object.assign({status:status}, extra||{});
+  LS.set(K.dayStatus, m);
+}
+
+function getWater(){ return LS.get(K.water, {}); }
+function addWater(ml){
+  const w = getWater(); const k = todayKey();
+  w[k] = (w[k]||0) + ml; LS.set(K.water, w); return w[k];
+}
+function getWaterGoal(){ return LS.get(K.waterGoal, 2500); }
+function setWaterGoal(v){ LS.set(K.waterGoal, v); }
+
+function getBodyLogs(){ return LS.get(K.body, []); }
+function addBodyLog(entry){ const b = getBodyLogs(); b.push(entry); LS.set(K.body, b); }
+
+/* ============================================================
+   DERIVED DATA HELPERS
+   ============================================================ */
+function currentWeekNumber(){
+  const s = getSettings();
+  const start = new Date(s.startDate+"T00:00:00");
+  const now = new Date(todayKey()+"T00:00:00");
+  const diffDays = Math.floor((now-start)/(1000*60*60*24));
+  let wk = Math.floor(diffDays/7)+1;
+  if(wk<1) wk=1;
+  if(wk>12) wk=12;
+  return wk;
+}
+function setsForWeek(baseSets){
+  const wk = currentWeekNumber();
+  if(wk<=2) return Math.min(baseSets,2);
+  return baseSets;
+}
+function phaseLabel(){
+  const wk = currentWeekNumber();
+  if(wk<=2) return "Adaptation Phase — focus on technique";
+  if(wk<=4) return "Building Phase — standard 3 sets";
+  if(wk<=8) return "Progressive Overload Phase";
+  return "Strength & Muscle Phase";
+}
+function todaysPlan(){ return DAY_PLANS[new Date().getDay()]; }
+
+function estimateDuration(day){
+  if(!day || day.type==="rest") return 0;
+  if(day.type==="cardio") return 35;
+  let mins = 8;
+  day.exercises.forEach(e=>{
+    const s = setsForWeek(e.sets);
+    const exlib = EXLIB[e.ex];
+    const workSec = exlib.isHold ? 30 : 45;
+    mins += (s*(workSec+e.rest))/60;
+  });
+  mins += 6;
+  return Math.round(mins);
+}
+function lastPerformance(exId){
+  const logs = getLogs();
+  for(let i=logs.length-1;i>=0;i--){
+    const sets = (logs[i].sets||[]).filter(s=>s.exId===exId);
+    if(sets.length){ const last = sets[sets.length-1]; return {weight:last.weight, reps:last.reps, date:logs[i].date}; }
+  }
+  return null;
+}
+function weightAdvice(difficulty, painFlag){
+  if(painFlag) return "Reduce the weight and prioritise proper form — never increase weight when pain is reported.";
+  switch(difficulty){
+    case "Easy": return "Consider a small weight increase next workout.";
+    case "Good": return "Maintain the same weight and focus on clean form.";
+    case "Hard": return "Maintain or slightly reduce the weight.";
+    case "Very Hard": return "Reduce the weight and prioritise proper form.";
+    default: return "";
+  }
+}
+function computeStreak(){
+  const map = getDayStatusMap();
+  let streak = 0;
+  let d = new Date();
+  // if today has no entry yet, start counting from yesterday
+  if(!map[todayKey(d)]) d.setDate(d.getDate()-1);
+  while(true){
+    const k = todayKey(d);
+    const rec = map[k];
+    if(rec && (rec.status==="completed" || rec.status==="cardio" || rec.status==="recovery")){
+      streak++; d.setDate(d.getDate()-1);
+    } else break;
+  }
+  return streak;
+}
+function greetingWord(){
+  const h = new Date().getHours();
+  if(h<12) return "Good Morning";
+  if(h<17) return "Good Afternoon";
+  return "Good Evening";
+}
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+let toastTimer=null;
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove("show"), 2600);
+}
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+let currentView = "home";
+function switchView(name){
+  currentView = name;
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+  document.getElementById("view-"+name).classList.add("active");
+  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active", b.dataset.view===name));
+  renderAll();
+  document.getElementById("view-root").scrollTop = 0;
+}
+document.querySelectorAll(".nav-btn").forEach(btn=>{
+  btn.addEventListener("click", ()=>switchView(btn.dataset.view));
+});
+
+function renderAll(){
+  document.getElementById("topDateChip").textContent = new Date().toLocaleDateString(undefined,{weekday:"short", day:"numeric", month:"short"});
+  if(currentView==="home") renderHome();
+  if(currentView==="workout") renderWorkout();
+  if(currentView==="progress") renderProgress();
+  if(currentView==="history") renderHistory();
+  if(currentView==="settings") renderSettings();
+}
+
+/* ============================================================
+   DIAL (SVG circular progress) — signature element
+   ============================================================ */
+function dialSVG(pct, colorVar){
+  const r=44, c=2*Math.PI*r;
+  const off = c - (Math.max(0,Math.min(100,pct))/100)*c;
+  return `<svg width="104" height="104" viewBox="0 0 104 104">
+    <circle cx="52" cy="52" r="${r}" fill="none" stroke="var(--surface-2)" stroke-width="10"/>
+    <circle cx="52" cy="52" r="${r}" fill="none" stroke="${colorVar}" stroke-width="10"
+      stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${off}"/>
+  </svg>`;
+}
+
+/* ============================================================
+   HOME VIEW
+   ============================================================ */
+function renderHome(){
+  const s = getSettings();
+  const day = todaysPlan();
+  const dk = todayKey();
+  const statusMap = getDayStatusMap();
+  const status = statusMap[dk] ? statusMap[dk].status : "pending";
+  const wk = currentWeekNumber();
+  const dur = estimateDuration(day);
+  const streak = computeStreak();
+
+  let statusPill = `<span class="pill pill-pending">Pending</span>`;
+  if(status==="completed") statusPill = `<span class="pill pill-done">Completed</span>`;
+  else if(status==="cardio") statusPill = `<span class="pill pill-done">Cardio Done</span>`;
+  else if(status==="recovery") statusPill = `<span class="pill pill-warn">Recovery</span>`;
+  else if(day.type==="rest") statusPill = `<span class="pill pill-rest">Rest Day</span>`;
+
+  const dialPct = day.type==="rest" ? 100 : Math.min(100, (dur/60)*100);
+
+  let html = `
+    <div class="card">
+      <div class="eyebrow">${greetingWord()}</div>
+      <h2>${escapeHTML(s.name)} 👋</h2>
+      <p class="sub">Week ${wk} of 12 · ${phaseLabel()}</p>
+    </div>
+
+    <div class="card">
+      <div class="eyebrow">Today's Workout</div>
+      <div class="dial-wrap">
+        <div class="dial">${dialSVG(dialPct, "var(--accent)")}
+          <div class="dial-label"><div class="dial-num">${day.type==="rest"?"😴":dur}</div><div class="dial-txt">${day.type==="rest"?"rest":"min"}</div></div>
+        </div>
+        <div style="flex:1;">
+          <div style="font-size:19px; font-weight:800;">${day.name} — ${day.muscle}</div>
+          <div style="margin-top:6px;">${statusPill}</div>
+        </div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-box"><div class="num">${day.type==="workout"?day.exercises.length:(day.type==="cardio"?day.cardioOptions.length:0)}</div><div class="lbl">${day.type==="workout"?"Exercises":(day.type==="cardio"?"Options":"—")}</div></div>
+        <div class="stat-box"><div class="num">Wk ${wk}</div><div class="lbl">Training Week</div></div>
+      </div>
+      ${day.note?`<p class="sub" style="margin-top:10px;">⚠️ ${day.note}</p>`:""}
+      <div style="margin-top:16px;" class="btn-row">
+        <button class="btn btn-primary" id="homeStartBtn">${day.type==="rest"?"Open Rest Day":"Start Workout"}</button>
+      </div>
+      <div class="btn-row" style="margin-top:10px;">
+        <button class="btn btn-ghost btn-sm" id="homePainBtn" style="flex:1;">I Have Muscle Pain Today</button>
+        <button class="btn btn-ghost btn-sm" id="homeRecoveryBtn" style="flex:1;">Take Recovery Day</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="eyebrow">This Week At A Glance</div>
+      <ul class="simple-list">
+        ${[1,2,3,4,5,6,0].map(dnum=>{
+          const dp = DAY_PLANS[dnum];
+          const isToday = dnum===new Date().getDay();
+          return `<li><span class="dot" style="background:${isToday?"var(--accent)":"var(--border)"}"></span>
+            <span style="flex:1; ${isToday?"font-weight:800;":""}">${dp.name}</span>
+            <span style="color:var(--text-dim); font-size:12.5px;">${dp.muscle}</span></li>`;
+        }).join("")}
+      </ul>
+    </div>
+
+    <div class="card tight">
+      <div class="stat-grid">
+        <div class="stat-box"><div class="num">${streak}🔥</div><div class="lbl">Day Streak</div></div>
+        <div class="stat-box"><div class="num">${getLogs().length}</div><div class="lbl">Total Sessions</div></div>
+      </div>
+    </div>
+  `;
+  document.getElementById("view-home").innerHTML = html;
+
+  document.getElementById("homeStartBtn").addEventListener("click", ()=>{ switchView("workout"); startSessionFlow(); });
+  document.getElementById("homePainBtn").addEventListener("click", ()=>{ switchView("workout"); startSessionFlow(true); });
+  document.getElementById("homeRecoveryBtn").addEventListener("click", ()=>{
+    setDayStatus(dk, "recovery");
+    toast("Recovery day logged. Rest well 💤");
+    renderAll();
+  });
+}
+
+/* ============================================================
+   WORKOUT SESSION STATE MACHINE
+   ============================================================ */
+let session = null; // active session object, null when idle
+
+function startSessionFlow(painShortcut){
+  const day = todaysPlan();
+  const dk = todayKey();
+  session = {
+    day: day, dateKey: dk, week: currentWeekNumber(),
+    stage: day.type==="rest" ? "restday" : (day.type==="cardio" ? "cardio" : "pain-check"),
+    painLevel: null, painFlagPerSet:false,
+    exIndex:0, setIndex:0, sets:[], startTime: Date.now(),
+    restSeconds:0, restRemaining:0, restTimerId:null,
+    diffSelected:null
+  };
+  if(painShortcut) session.stage = "pain-check";
+  renderWorkout();
+}
+
+function renderWorkout(){
+  const el = document.getElementById("view-workout");
+  if(!session){
+    const day = todaysPlan();
+    let list = "";
+    if(day.type==="workout"){
+      list = day.exercises.map((e,i)=>{
+        const lib = EXLIB[e.ex];
+        return `<li><span class="dot"></span><span style="flex:1;">${i+1}. ${lib.name}</span><span style="color:var(--text-dim); font-size:12px;">${setsForWeek(e.sets)}×${e.reps}</span></li>`;
+      }).join("");
+    } else if(day.type==="cardio"){
+      list = day.cardioOptions.map(c=>`<li><span class="dot"></span><span>${c}</span></li>`).join("");
+    }
+    el.innerHTML = `
+      <div class="card">
+        <div class="eyebrow">${day.name}</div>
+        <h2>${day.muscle}</h2>
+        <p class="sub">${day.type==="rest" ? "A scheduled rest day — recovery is part of training." : "Estimated duration: "+estimateDuration(day)+" minutes"}</p>
+      </div>
+      ${day.type!=="rest" ? `<div class="card"><div class="eyebrow">Plan</div><ul class="simple-list">${list}</ul></div>` : ""}
+      <button class="btn btn-primary" id="wStartBtn">${day.type==="rest" ? "Open Rest Day" : "Start Workout"}</button>
+    `;
+    document.getElementById("wStartBtn").addEventListener("click", ()=>startSessionFlow());
+    return;
+  }
+  renderSessionStage();
+}
+
+function renderSessionStage(){
+  const el = document.getElementById("view-workout");
+  switch(session.stage){
+    case "pain-check": el.innerHTML = painCheckHTML(); bindPainCheck(); break;
+    case "pain-warning": el.innerHTML = painWarningHTML(); bindPainWarning(); break;
+    case "recovery-suggest": el.innerHTML = recoverySuggestHTML(); bindRecoverySuggest(); break;
+    case "warmup": el.innerHTML = warmupHTML(); bindWarmup(); break;
+    case "exercise": el.innerHTML = exerciseHTML(); bindExercise(); break;
+    case "rest": el.innerHTML = restHTML(); bindRest(); break;
+    case "cooldown": el.innerHTML = cooldownHTML(); bindCooldown(); break;
+    case "summary": el.innerHTML = summaryHTML(); bindSummary(); break;
+    case "cardio": el.innerHTML = cardioHTML(); bindCardio(); break;
+    case "restday": el.innerHTML = restdayHTML(); bindRestday(); break;
+  }
+}
+
+/* ---- Pain check ---- */
+function painCheckHTML(){
+  return `
+    <div class="card">
+      <div class="eyebrow">Before You Start</div>
+      <h2>How is your body feeling today?</h2>
+      <p class="sub">This helps IronDaily suggest a safe session. It does not diagnose any medical condition.</p>
+    </div>
+    <div class="opt-list">
+      <button class="opt-card" data-p="good"><b>Feeling Good</b><span>No unusual soreness — proceed with today's full plan.</span></button>
+      <button class="opt-card" data-p="mild"><b>Mild Muscle Soreness</b><span>A bit tight from last session — extended warm-up, lighter weight.</span></button>
+      <button class="opt-card" data-p="moderate"><b>Moderate Muscle Pain</b><span>Noticeable discomfort — recovery or light mobility is recommended.</span></button>
+      <button class="opt-card danger" data-p="severe"><b>Severe Pain</b><span>Sharp, swollen, or worsening pain — training should stop.</span></button>
+    </div>
+  `;
+}
+function bindPainCheck(){
+  document.querySelectorAll(".opt-card").forEach(b=>b.addEventListener("click", ()=>{
+    const p = b.dataset.p;
+    session.painLevel = p;
+    if(p==="good"){ session.stage="warmup"; }
+    else if(p==="mild"){ session.painFlagPerSet=false; session.stage="warmup"; }
+    else if(p==="moderate"){ session.stage="recovery-suggest"; }
+    else if(p==="severe"){ session.stage="pain-warning"; }
+    renderSessionStage();
+  }));
+}
+
+function painWarningHTML(){
+  return `
+    <div class="card" style="border-color:var(--danger);">
+      <div class="eyebrow" style="color:var(--danger);">Please Stop</div>
+      <h2>Training is not recommended today</h2>
+      <p class="sub">You reported severe pain. Please stop training for today. If pain is severe, worsening, swollen, injured, or unusual, consider a professional medical assessment before your next workout.</p>
+      <p class="disclaimer">IronDaily does not diagnose injuries or medical conditions and is not a substitute for a qualified medical or fitness professional.</p>
+    </div>
+    <button class="btn btn-secondary" id="painEndBtn">Take a Rest Day Instead</button>
+  `;
+}
+function bindPainWarning(){
+  document.getElementById("painEndBtn").addEventListener("click", ()=>{
+    setDayStatus(session.dateKey, "recovery", {painLevel:"severe"});
+    session = null; toast("Logged as a recovery day. Take care of yourself.");
+    switchView("home");
+  });
+}
+
+function recoverySuggestHTML(){
+  return `
+    <div class="card" style="border-color:var(--warn);">
+      <div class="eyebrow" style="color:var(--warn);">Moderate Pain Reported</div>
+      <h2>Consider recovery instead of heavy training</h2>
+      <p class="sub">With moderate muscle pain, gentle walking and mobility work is recommended over today's planned resistance training.</p>
+    </div>
+    <button class="btn btn-primary" id="recDoBtn">Do Recovery Instead</button>
+    <div style="height:10px;"></div>
+    <button class="btn btn-ghost" id="recContinueBtn">Continue Anyway (Not Recommended)</button>
+  `;
+}
+function bindRecoverySuggest(){
+  document.getElementById("recDoBtn").addEventListener("click", ()=>{
+    setDayStatus(session.dateKey, "recovery", {painLevel:"moderate"});
+    session = null; toast("Recovery day logged. Rest well.");
+    switchView("home");
+  });
+  document.getElementById("recContinueBtn").addEventListener("click", ()=>{
+    session.painFlagPerSet = true;
+    session.stage = "warmup";
+    renderSessionStage();
+  });
+}
+
+/* ---- Warmup ---- */
+function warmupHTML(){
+  const day = session.day;
+  const note = session.painLevel==="mild" ? `<p class="sub" style="color:var(--warn);">Mild soreness noted — take extra time here and start lighter than usual.</p>` : "";
+  return `
+    <div class="card">
+      <div class="eyebrow">Warm-Up</div>
+      <h2>${day.name} — ${day.muscle}</h2>
+      ${note}
+    </div>
+    <div class="card">
+      <ul class="check-list">
+        ${day.warmup.map((w,i)=>`<li><input type="checkbox" checked disabled>${w}</li>`).join("")}
+      </ul>
+    </div>
+    <button class="btn btn-primary" id="warmupGoBtn">Begin Exercises</button>
+  `;
+}
+function bindWarmup(){
+  document.getElementById("warmupGoBtn").addEventListener("click", ()=>{
+    session.stage="exercise"; session.exIndex=0; session.setIndex=0;
+    renderSessionStage();
+  });
+}
+
+/* ---- Exercise ---- */
+function exerciseHTML(){
+  const day = session.day;
+  const eObj = day.exercises[session.exIndex];
+  const lib = EXLIB[eObj.ex];
+  const totalSets = setsForWeek(eObj.sets);
+  const prev = lastPerformance(eObj.ex);
+  const s = getSettings();
+  const progressPct = Math.round(((session.exIndex + (session.setIndex/totalSets)) / day.exercises.length) * 100);
+
+  return `
+    <div class="ex-progress-track"><div class="ex-progress-fill" style="width:${progressPct}%;"></div></div>
+    <div class="ex-head"><span class="exno">Exercise ${session.exIndex+1} of ${day.exercises.length}</span>
+      <button class="link-btn" id="exGuideBtn">Exercise Guide →</button></div>
+    <h2 class="ex-name">${lib.name}</h2>
+    <div class="ex-target">Target: ${lib.target}</div>
+    <div class="set-badge">Set ${session.setIndex+1} of ${totalSets} · Target ${eObj.reps} reps</div>
+
+    <div class="card">
+      <div class="field-row">
+        <div class="field">
+          <label>Weight (${s.unit})</label>
+          <input type="number" id="wInput" inputmode="decimal" placeholder="${lib.isHold?"0":"e.g. 15"}" value="${lib.isHold ? "0" : (prev?prev.weight:"")}">
+        </div>
+        <div class="field">
+          <label>${lib.isHold ? "Seconds Held" : "Completed Reps"}</label>
+          <input type="number" id="rInput" inputmode="numeric" placeholder="${lib.isHold?"e.g. 25":"e.g. 10"}">
+        </div>
+      </div>
+      <div class="prev-note">${prev ? `Previous: ${prev.weight}${s.unit} × ${prev.reps} ${lib.isHold?"sec":"reps"}` : "No previous data yet — log your first set."}</div>
+
+      <label style="display:block; font-size:11px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.06em; margin-bottom:8px;">Difficulty</label>
+      <div class="diff-grid">
+        <button class="diff-btn" data-d="Easy">Easy</button>
+        <button class="diff-btn" data-d="Good">Good</button>
+        <button class="diff-btn" data-d="Hard">Hard</button>
+        <button class="diff-btn" data-d="Very Hard">Very Hard</button>
+      </div>
+      <label class="pain-check-row"><input type="checkbox" id="painSetChk" ${session.painFlagPerSet?"checked":""}> I felt pain during this set</label>
+      <button class="btn btn-success" id="completeSetBtn">Complete Set</button>
+    </div>
+    <button class="btn btn-ghost btn-sm" id="skipExBtn">Skip This Exercise</button>
+  `;
+}
+function bindExercise(){
+  let chosenDiff = null;
+  document.querySelectorAll(".diff-btn").forEach(b=>b.addEventListener("click", ()=>{
+    document.querySelectorAll(".diff-btn").forEach(x=>x.classList.remove("active"));
+    b.classList.add("active"); chosenDiff = b.dataset.d;
+  }));
+  document.getElementById("exGuideBtn").addEventListener("click", ()=>showExerciseGuide(session.day.exercises[session.exIndex].ex));
+  document.getElementById("completeSetBtn").addEventListener("click", ()=>{
+    const day = session.day;
+    const eObj = day.exercises[session.exIndex];
+    const lib = EXLIB[eObj.ex];
+    const w = parseFloat(document.getElementById("wInput").value) || 0;
+    const r = parseFloat(document.getElementById("rInput").value) || 0;
+    const painFlag = document.getElementById("painSetChk").checked;
+    if(!chosenDiff){ toast("Please select a difficulty level."); return; }
+    if(!r){ toast(lib.isHold ? "Enter seconds held." : "Enter completed reps."); return; }
+
+    session.sets.push({exId:eObj.ex, exName:lib.name, setNumber:session.setIndex+1, weight:w, reps:r, difficulty:chosenDiff, pain:painFlag});
+    toast(weightAdvice(chosenDiff, painFlag));
+
+    const totalSets = setsForWeek(eObj.sets);
+    const isLastSetOfExercise = session.setIndex+1 >= totalSets;
+    const isLastExercise = session.exIndex+1 >= day.exercises.length;
+
+    if(isLastSetOfExercise && isLastExercise){
+      session.stage = "cooldown";
+    } else {
+      session.restSeconds = eObj.rest;
+      session.restRemaining = eObj.rest;
+      session.stage = "rest";
+      session._advanceAfterRest = () => {
+        if(isLastSetOfExercise){ session.exIndex++; session.setIndex=0; }
+        else { session.setIndex++; }
+        session.stage="exercise";
+      };
+    }
+    renderSessionStage();
+  });
+  document.getElementById("skipExBtn").addEventListener("click", ()=>{
+    const day = session.day;
+    if(session.exIndex+1 >= day.exercises.length){ session.stage="cooldown"; }
+    else { session.exIndex++; session.setIndex=0; session.stage="exercise"; }
+    renderSessionStage();
+  });
+}
+
+function showExerciseGuide(exId){
+  const lib = EXLIB[exId];
+  const root = document.getElementById("modal-root");
+  root.innerHTML = `
+    <div class="modal-overlay" id="guideOverlay">
+      <div class="modal">
+        <div class="modal-handle"></div>
+        <h3>${lib.name}</h3>
+        <div class="eyebrow">How To Perform</div>
+        <ul class="simple-list">${lib.how.map(h=>`<li><span class="dot"></span>${h}</li>`).join("")}</ul>
+        <div class="eyebrow" style="margin-top:12px;">Breathing</div>
+        <ul class="simple-list">
+          <li><span class="dot" style="background:var(--accent-2);"></span>${lib.breathing.exhale}</li>
+          <li><span class="dot" style="background:var(--accent-2);"></span>${lib.breathing.inhale}</li>
+        </ul>
+        <div class="eyebrow" style="margin-top:12px; color:var(--danger);">Common Mistakes</div>
+        <ul class="simple-list">${lib.mistakes.map(m=>`<li><span class="dot" style="background:var(--danger);"></span>${m}</li>`).join("")}</ul>
+        <button class="btn btn-secondary" id="closeGuideBtn" style="margin-top:8px;">Close</button>
+      </div>
+    </div>`;
+  document.getElementById("closeGuideBtn").addEventListener("click", closeModal);
+  document.getElementById("guideOverlay").addEventListener("click", (e)=>{ if(e.target.id==="guideOverlay") closeModal(); });
+}
+function closeModal(){ document.getElementById("modal-root").innerHTML=""; }
+
+/* ---- Rest timer ---- */
+function restHTML(){
+  return `
+    <div class="card timer-wrap">
+      <div class="timer-sub">Rest Time</div>
+      <div class="timer-big" id="timerDisplay">${formatTime(session.restRemaining)}</div>
+      <div class="timer-sub" id="timerHint">Ready for your next set 💪 will show when done</div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" id="addRestBtn">+30 Seconds</button>
+      <button class="btn btn-ghost" id="skipRestBtn">Skip Rest</button>
+    </div>
+  `;
+}
+function formatTime(sec){ sec=Math.max(0,Math.round(sec)); const m=Math.floor(sec/60), s=sec%60; return `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`; }
+function bindRest(){
+  clearInterval(session.restTimerId);
+  session.restTimerId = setInterval(()=>{
+    session.restRemaining--;
+    const disp = document.getElementById("timerDisplay");
+    if(!disp){ clearInterval(session.restTimerId); return; }
+    if(session.restRemaining<=0){
+      clearInterval(session.restTimerId);
+      document.getElementById("timerHint").textContent = "Ready for your next set 💪";
+      disp.textContent = "00:00";
+      if(getSettings().sound) beep();
+      setTimeout(()=>{ if(session && session.stage==="rest"){ session._advanceAfterRest(); renderSessionStage(); } }, 900);
+      return;
+    }
+    disp.textContent = formatTime(session.restRemaining);
+  }, 1000);
+  document.getElementById("addRestBtn").addEventListener("click", ()=>{ session.restRemaining += 30; document.getElementById("timerDisplay").textContent = formatTime(session.restRemaining); });
+  document.getElementById("skipRestBtn").addEventListener("click", ()=>{
+    clearInterval(session.restTimerId);
+    session._advanceAfterRest(); renderSessionStage();
+  });
+}
+function beep(){
+  try{
+    const ctx = new (window.AudioContext||window.webkitAudioContext)();
+    const o = ctx.createOscillator(); const g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.frequency.value = 880; g.gain.value = 0.08;
+    o.start(); setTimeout(()=>{o.stop(); ctx.close();}, 220);
+  }catch(e){}
+}
+
+/* ---- Cooldown ---- */
+function cooldownHTML(){
+  const day = session.day;
+  return `
+    <div class="card">
+      <div class="eyebrow">Cool-Down & Stretching</div>
+      <h2>Nice work — finish it off right</h2>
+    </div>
+    <div class="card">
+      <ul class="check-list">${day.cooldown.map(c=>`<li><input type="checkbox" checked disabled>${c}</li>`).join("")}</ul>
+    </div>
+    <button class="btn btn-primary" id="finishBtn">Finish Workout</button>
+  `;
+}
+function bindCooldown(){
+  document.getElementById("finishBtn").addEventListener("click", finishWorkout);
+}
+
+function finishWorkout(){
+  const durationMin = Math.round((Date.now()-session.startTime)/60000) || estimateDuration(session.day);
+  const log = {
+    date: session.dateKey, type:"workout", dayName: session.day.name, muscle: session.day.muscle,
+    week: session.week, durationMin, sets: session.sets, painLevel: session.painLevel
+  };
+  addLog(log);
+  setDayStatus(session.dateKey, "completed", {painLevel:session.painLevel});
+
+  // update PRs
+  const prs = getPRs();
+  session.sets.forEach(st=>{
+    if(!st.weight || st.weight<=0) return;
+    const cur = prs[st.exId];
+    if(!cur || st.weight>cur.weight || (st.weight===cur.weight && st.reps>cur.reps)){
+      prs[st.exId] = {weight:st.weight, reps:st.reps, date:session.dateKey};
+    }
+  });
+  savePRs(prs);
+
+  session.stage = "summary";
+  session._log = log;
+  renderSessionStage();
+}
+
+function summaryHTML(){
+  const log = session._log;
+  return `
+    <div class="card" style="text-align:center;">
+      <div style="font-size:44px;">🏆</div>
+      <h2>Workout Complete</h2>
+      <p class="sub">${log.dayName} — ${log.muscle}</p>
+      <div class="stat-grid" style="margin-top:14px;">
+        <div class="stat-box"><div class="num">${log.durationMin}</div><div class="lbl">Minutes</div></div>
+        <div class="stat-box"><div class="num">${log.sets.length}</div><div class="lbl">Sets Logged</div></div>
+      </div>
+    </div>
+    <button class="btn btn-primary" id="doneBtn">Back to Home</button>
+  `;
+}
+function bindSummary(){
+  document.getElementById("doneBtn").addEventListener("click", ()=>{ session=null; switchView("home"); });
+}
+
+/* ---- Cardio day ---- */
+function cardioHTML(){
+  const day = session.day;
+  return `
+    <div class="card">
+      <div class="eyebrow">${day.name} — Cardio + Mobility</div>
+      <h2>Pick one cardio option</h2>
+    </div>
+    <div class="card"><ul class="simple-list">${day.cardioOptions.map(c=>`<li><span class="dot"></span>${c}</li>`).join("")}</ul></div>
+    <div class="card"><div class="eyebrow">Mobility</div><p class="sub">${day.mobility}</p></div>
+    <button class="btn btn-primary" id="cardioDoneBtn">Mark Cardio Complete</button>
+  `;
+}
+function bindCardio(){
+  document.getElementById("cardioDoneBtn").addEventListener("click", ()=>{
+    addLog({date:session.dateKey, type:"cardio", dayName:session.day.name, muscle:session.day.muscle, week:session.week, durationMin:30, sets:[], painLevel:null});
+    setDayStatus(session.dateKey, "cardio");
+    session=null; toast("Cardio day logged 🚴");
+    switchView("home");
+  });
+}
+
+/* ---- Rest day ---- */
+function restdayHTML(){
+  return `
+    <div class="card">
+      <div class="eyebrow">Sunday — Rest & Recovery</div>
+      <h2>Complete rest</h2>
+      <p class="sub">Light walking is optional today. Recovery is where your muscles actually grow stronger.</p>
+    </div>
+    <div class="card">
+      <ul class="simple-list">
+        <li><span class="dot"></span>Stay hydrated throughout the day</li>
+        <li><span class="dot"></span>Eat a balanced diet with adequate protein</li>
+        <li><span class="dot"></span>Aim for 7–9 hours of sleep tonight</li>
+        <li><span class="dot"></span>Optional: a relaxed walk if you feel like moving</li>
+      </ul>
+    </div>
+    <button class="btn btn-primary" id="restDoneBtn">Mark Recovery Day</button>
+  `;
+}
+function bindRestday(){
+  document.getElementById("restDoneBtn").addEventListener("click", ()=>{
+    setDayStatus(session.dateKey, "recovery");
+    session=null; toast("Recovery day logged. Enjoy the rest 🌙");
+    switchView("home");
+  });
+}
+
+/* ============================================================
+   PROGRESS VIEW
+   ============================================================ */
+function renderProgress(){
+  const logs = getLogs();
+  const workoutsCompleted = logs.filter(l=>l.type==="workout"||l.type==="cardio").length;
+  const now = new Date();
+  const weekStart = new Date(now); weekStart.setDate(now.getDate()-now.getDay());
+  const thisWeek = logs.filter(l=>{
+    const d = new Date(l.date+"T00:00:00");
+    return d>=weekStart;
+  }).length;
+  const streak = computeStreak();
+  const totalMin = logs.reduce((a,l)=>a+(l.durationMin||0),0);
+  const muscleTally = {};
+  logs.forEach(l=>{ if(l.muscle){ muscleTally[l.muscle]=(muscleTally[l.muscle]||0)+1; } });
+  let topMuscle = "—", topCount=0;
+  Object.keys(muscleTally).forEach(m=>{ if(muscleTally[m]>topCount){topCount=muscleTally[m]; topMuscle=m;} });
+
+  // last 7 days bar chart
+  const days=[]; for(let i=6;i>=0;i--){ const d=new Date(); d.setDate(d.getDate()-i); days.push(d); }
+  const dayCounts = days.map(d=>{
+    const k = todayKey(d);
+    return logs.filter(l=>l.date===k).length;
+  });
+  const maxCount = Math.max(1, ...dayCounts);
+
+  // exercise progress comparisons
+  const exSeen = {};
+  logs.forEach(l=>(l.sets||[]).forEach(st=>{
+    if(!exSeen[st.exId]) exSeen[st.exId]=[];
+    exSeen[st.exId].push(st);
+  }));
+  let compareHTML = "";
+  Object.keys(exSeen).forEach(exId=>{
+    const arr = exSeen[exId].filter(s=>s.weight>0);
+    if(arr.length<1) return;
+    const first = arr[0], latest = arr[arr.length-1];
+    const delta = latest.weight-first.weight;
+    compareHTML += `<div class="compare-row">
+      <div><div class="exname">${EXLIB[exId].name}</div><div style="font-size:11.5px; color:var(--text-faint);">${first.weight}${getSettings().unit}×${first.reps} → ${latest.weight}${getSettings().unit}×${latest.reps}</div></div>
+      <div class="delta ${delta>0?"up":"flat"}">${delta>0?"+":""}${delta}${getSettings().unit}</div>
+    </div>`;
+  });
+  if(!compareHTML) compareHTML = `<div class="empty-state"><div class="big">📊</div>Complete a few workouts to see progress here.</div>`;
+
+  // PRs
+  const prs = getPRs();
+  let prHTML = "";
+  Object.keys(prs).forEach(exId=>{
+    if(!EXLIB[exId]) return;
+    const p = prs[exId];
+    prHTML += `<div class="compare-row"><div class="exname">${EXLIB[exId].name}</div><div style="font-size:13px; font-weight:800; color:var(--accent);">${p.weight}${getSettings().unit} × ${p.reps}</div></div>`;
+  });
+  if(!prHTML) prHTML = `<div class="empty-state"><div class="big">🏅</div>Your personal records will appear here.</div>`;
+
+  // water
+  const water = getWater(); const todayWater = water[todayKey()]||0;
+  const goal = getWaterGoal();
+  const waterPct = Math.min(100, Math.round((todayWater/goal)*100));
+
+  // body logs
+  const body = getBodyLogs();
+  const lastBody = body[body.length-1];
+
+  document.getElementById("view-progress").innerHTML = `
+    <div class="card">
+      <div class="eyebrow">Progress Dashboard</div>
+      <div class="stat-grid">
+        <div class="stat-box"><div class="num">${workoutsCompleted}</div><div class="lbl">Total Workouts</div></div>
+        <div class="stat-box"><div class="num">${thisWeek}</div><div class="lbl">This Week</div></div>
+        <div class="stat-box"><div class="num">${streak}🔥</div><div class="lbl">Current Streak</div></div>
+        <div class="stat-box"><div class="num">${totalMin}</div><div class="lbl">Total Minutes</div></div>
+        <div class="stat-box"><div class="num" style="font-size:14px;">${topMuscle}</div><div class="lbl">Most Trained</div></div>
+        <div class="stat-box"><div class="num">Wk ${currentWeekNumber()}</div><div class="lbl">Training Week</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="eyebrow">Last 7 Days</div>
+      ${days.map((d,i)=>`<div class="bar-row"><div class="bar-lbl">${d.toLocaleDateString(undefined,{weekday:"short"})}</div><div class="bar-track"><div class="bar-fill" style="width:${(dayCounts[i]/maxCount)*100}%;"></div></div><div class="bar-val">${dayCounts[i]}</div></div>`).join("")}
+    </div>
+
+    <div class="card">
+      <div class="eyebrow">Exercise Progress</div>
+      ${compareHTML}
+    </div>
+
+    <div class="card">
+      <div class="eyebrow">Personal Records</div>
+      ${prHTML}
+      <p class="disclaimer">Personal records are drawn from your logged working sets — IronDaily does not encourage one-rep max testing for beginners.</p>
+    </div>
+
+    <div class="card">
+      <div class="eyebrow">Today's Water</div>
+      <div class="water-visual">
+        <div class="water-bottle"><div class="water-fill" style="height:${waterPct}%;"></div></div>
+        <div style="flex:1;">
+          <div style="font-size:22px; font-weight:900;">${todayWater} ml</div>
+          <div style="font-size:12px; color:var(--text-dim);">Goal: ${goal} ml</div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-secondary btn-sm" id="water250" style="flex:1;">+250 ml</button>
+        <button class="btn btn-secondary btn-sm" id="water500" style="flex:1;">+500 ml</button>
+      </div>
+      <button class="link-btn" id="editGoalBtn" style="margin-top:8px;">Edit Water Goal</button>
+      <p class="disclaimer">IronDaily does not prescribe a medical hydration target — set a goal that suits you.</p>
+    </div>
+
+    <div class="card">
+      <div class="eyebrow">Body Progress</div>
+      ${lastBody? `<p class="sub">Latest: ${lastBody.date} — ${lastBody.weight||"—"}${getSettings().unit}, Waist ${lastBody.waist||"—"}cm, Chest ${lastBody.chest||"—"}cm, Arm ${lastBody.arm||"—"}cm</p>` : `<p class="sub">No body measurements logged yet.</p>`}
+      ${body.length>1 ? bodySparkline(body) : ""}
+      <button class="btn btn-secondary" id="addBodyBtn" style="margin-top:10px;">Log Body Measurement</button>
+      <p class="disclaimer">Trends are for personal tracking only — IronDaily makes no medical claims about body composition.</p>
+    </div>
+  `;
+
+  document.getElementById("water250").addEventListener("click", ()=>{ addWater(250); renderProgress(); });
+  document.getElementById("water500").addEventListener("click", ()=>{ addWater(500); renderProgress(); });
+  document.getElementById("editGoalBtn").addEventListener("click", openWaterGoalModal);
+  document.getElementById("addBodyBtn").addEventListener("click", openBodyLogModal);
+}
+
+function bodySparkline(body){
+  const pts = body.slice(-10).map(b=>b.weight).filter(v=>typeof v==="number");
+  if(pts.length<2) return "";
+  const w=280,h=54,pad=6;
+  const min=Math.min(...pts), max=Math.max(...pts);
+  const range = (max-min)||1;
+  const stepX = (w-pad*2)/(pts.length-1);
+  const coords = pts.map((v,i)=>{
+    const x = pad+i*stepX;
+    const y = h-pad-((v-min)/range)*(h-pad*2);
+    return `${x},${y}`;
+  }).join(" ");
+  return `<svg width="100%" viewBox="0 0 ${w} ${h}" style="margin-top:10px;"><polyline points="${coords}" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+}
+
+function openWaterGoalModal(){
+  const root = document.getElementById("modal-root");
+  root.innerHTML = `<div class="modal-overlay" id="wgOverlay"><div class="modal">
+    <div class="modal-handle"></div>
+    <h3>Set Your Water Goal</h3>
+    <div class="form-group"><label>Daily Goal (ml)</label><input type="number" id="wgInput" value="${getWaterGoal()}"></div>
+    <button class="btn btn-primary" id="wgSaveBtn">Save</button>
+  </div></div>`;
+  document.getElementById("wgSaveBtn").addEventListener("click", ()=>{
+    const v = parseInt(document.getElementById("wgInput").value)||2500;
+    setWaterGoal(v); closeModal(); renderProgress();
+  });
+  document.getElementById("wgOverlay").addEventListener("click",(e)=>{if(e.target.id==="wgOverlay")closeModal();});
+}
+
+function openBodyLogModal(){
+  const s = getSettings();
+  const root = document.getElementById("modal-root");
+  root.innerHTML = `<div class="modal-overlay" id="bodyOverlay"><div class="modal">
+    <div class="modal-handle"></div>
+    <h3>Log Body Measurement</h3>
+    <div class="form-group"><label>Body Weight (${s.unit})</label><input type="number" id="bWeight"></div>
+    <div class="form-group"><label>Waist (cm)</label><input type="number" id="bWaist"></div>
+    <div class="form-group"><label>Chest (cm)</label><input type="number" id="bChest"></div>
+    <div class="form-group"><label>Arm (cm)</label><input type="number" id="bArm"></div>
+    <button class="btn btn-primary" id="bodySaveBtn">Save Measurement</button>
+  </div></div>`;
+  document.getElementById("bodySaveBtn").addEventListener("click", ()=>{
+    addBodyLog({
+      date: todayKey(),
+      weight: parseFloat(document.getElementById("bWeight").value)||null,
+      waist: parseFloat(document.getElementById("bWaist").value)||null,
+      chest: parseFloat(document.getElementById("bChest").value)||null,
+      arm: parseFloat(document.getElementById("bArm").value)||null
+    });
+    closeModal(); toast("Measurement saved."); renderProgress();
+  });
+  document.getElementById("bodyOverlay").addEventListener("click",(e)=>{if(e.target.id==="bodyOverlay")closeModal();});
+}
+
+/* ============================================================
+   HISTORY VIEW
+   ============================================================ */
+let historyCursor = new Date();
+function renderHistory(){
+  const map = getDayStatusMap();
+  const year = historyCursor.getFullYear(), month = historyCursor.getMonth();
+  const first = new Date(year, month, 1);
+  const startOffset = first.getDay();
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+  const monthLabel = first.toLocaleDateString(undefined,{month:"long", year:"numeric"});
+
+  let cells = "";
+  ["S","M","T","W","T","F","S"].forEach(d=>cells+=`<div class="cal-dow">${d}</div>`);
+  for(let i=0;i<startOffset;i++) cells += `<div class="cal-cell empty"></div>`;
+  for(let d=1; d<=daysInMonth; d++){
+    const dateObj = new Date(year, month, d);
+    const k = todayKey(dateObj);
+    const rec = map[k];
+    let cls = "cal-cell";
+    if(k===todayKey()) cls += " today";
+    if(rec){
+      if(rec.status==="completed"||rec.status==="cardio") cls += " completed";
+      else if(rec.status==="recovery") cls += " recovery";
+    } else if(dateObj.getDay()===0 && dateObj<=new Date()){
+      cls += " rest";
+    }
+    cells += `<div class="${cls}" data-date="${k}">${d}</div>`;
+  }
+
+  document.getElementById("view-history").innerHTML = `
+    <div class="card">
+      <div class="eyebrow">Workout History</div>
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+        <button class="btn-sm btn-ghost btn" id="histPrev" style="width:auto;">‹</button>
+        <h2 style="margin:0;">${monthLabel}</h2>
+        <button class="btn-sm btn-ghost btn" id="histNext" style="width:auto;">›</button>
+      </div>
+      <div class="cal-grid">${cells}</div>
+      <div class="legend">
+        <div class="legend-item"><span class="legend-dot" style="background:var(--accent-2);"></span>Completed</div>
+        <div class="legend-item"><span class="legend-dot" style="background:var(--warn);"></span>Recovery</div>
+        <div class="legend-item"><span class="legend-dot" style="background:var(--text-faint);"></span>Rest</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="eyebrow">Recent Sessions</div>
+      ${recentSessionsHTML()}
+    </div>
+  `;
+  document.getElementById("histPrev").addEventListener("click", ()=>{ historyCursor.setMonth(historyCursor.getMonth()-1); renderHistory(); });
+  document.getElementById("histNext").addEventListener("click", ()=>{ historyCursor.setMonth(historyCursor.getMonth()+1); renderHistory(); });
+  document.querySelectorAll(".cal-cell[data-date]").forEach(c=>c.addEventListener("click", ()=>openDayDetail(c.dataset.date)));
+}
+function recentSessionsHTML(){
+  const logs = getLogs().slice().reverse().slice(0,8);
+  if(!logs.length) return `<div class="empty-state"><div class="big">🗓️</div>No sessions logged yet.</div>`;
+  return `<ul class="simple-list">${logs.map(l=>`<li><span class="dot" style="background:${l.type==="cardio"?"var(--accent-2)":"var(--accent)"};"></span><span style="flex:1;">${l.date} — ${l.dayName}</span><span style="color:var(--text-dim); font-size:12px;">${l.durationMin||0} min</span></li>`).join("")}</ul>`;
+}
+function openDayDetail(dateKey){
+  const map = getDayStatusMap();
+  const rec = map[dateKey];
+  const logs = getLogs().filter(l=>l.date===dateKey);
+  const root = document.getElementById("modal-root");
+  let body = "";
+  if(logs.length){
+    logs.forEach(l=>{
+      body += `<div class="eyebrow" style="margin-top:10px;">${l.dayName} · ${l.durationMin||0} min</div>`;
+      if(l.sets && l.sets.length){
+        body += `<ul class="simple-list">${l.sets.map(s=>`<li><span class="dot"></span><span style="flex:1;">${s.exName} — Set ${s.setNumber}</span><span style="color:var(--text-dim); font-size:12px;">${s.weight}${getSettings().unit}×${s.reps} (${s.difficulty})</span></li>`).join("")}</ul>`;
+      } else {
+        body += `<p class="sub">${l.type==="cardio"?"Cardio session logged.":""}</p>`;
+      }
+    });
+  } else if(rec && rec.status==="recovery"){
+    body = `<p class="sub">Marked as a recovery day.${rec.painLevel? " Reason: "+rec.painLevel+" pain reported.":""}</p>`;
+  } else {
+    body = `<p class="sub">No activity logged for this day.</p>`;
+  }
+  root.innerHTML = `<div class="modal-overlay" id="ddOverlay"><div class="modal">
+    <div class="modal-handle"></div>
+    <h3>${dateKey}</h3>
+    ${body}
+    <button class="btn btn-secondary" id="ddCloseBtn" style="margin-top:14px;">Close</button>
+  </div></div>`;
+  document.getElementById("ddCloseBtn").addEventListener("click", closeModal);
+  document.getElementById("ddOverlay").addEventListener("click",(e)=>{if(e.target.id==="ddOverlay")closeModal();});
+}
+
+/* ============================================================
+   SETTINGS VIEW
+   ============================================================ */
+function renderSettings(){
+  const s = getSettings();
+  document.getElementById("view-settings").innerHTML = `
+    <div class="card">
+      <div class="eyebrow">Profile</div>
+      <div class="form-group"><label>Name</label><input type="text" id="setName" value="${escapeHTML(s.name)}"></div>
+      <div class="form-group"><label>Training Level</label>
+        <select id="setLevel"><option ${s.level==="Beginner"?"selected":""}>Beginner</option><option ${s.level==="Intermediate"?"selected":""}>Intermediate</option><option ${s.level==="Advanced"?"selected":""}>Advanced</option></select>
+      </div>
+      <div class="form-group"><label>Primary Goal</label><input type="text" id="setGoal" value="${escapeHTML(s.goal)}"></div>
+    </div>
+
+    <div class="card">
+      <div class="eyebrow">Workout Preferences</div>
+      <div class="form-group"><label>Workout Days per Week</label>
+        <select id="setDays"><option ${s.days===5?"selected":""}>5</option><option ${s.days===6?"selected":""}>6</option></select>
+      </div>
+      <div class="form-group"><label>Default Rest Timer (seconds)</label>
+        <select id="setRest"><option ${s.restDefault===60?"selected":""}>60</option><option ${s.restDefault===75?"selected":""}>75</option><option ${s.restDefault===90?"selected":""}>90</option><option ${s.restDefault===120?"selected":""}>120</option></select>
+      </div>
+      <div class="form-group"><label>Measurement Unit</label>
+        <select id="setUnit"><option ${s.unit==="KG"?"selected":""}>KG</option><option ${s.unit==="LB"?"selected":""}>LB</option></select>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="eyebrow">App</div>
+      <div class="toggle-row"><span>Sound</span><label class="switch"><input type="checkbox" id="setSound" ${s.sound?"checked":""}><span class="track"><span class="knob"></span></span></label></div>
+      <div class="toggle-row"><span>Notifications</span><label class="switch"><input type="checkbox" id="setNotif" ${s.notifications?"checked":""}><span class="track"><span class="knob"></span></span></label></div>
+    </div>
+
+    <button class="btn btn-primary" id="saveSettingsBtn">Save Settings</button>
+    <div style="height:12px;"></div>
+    <button class="btn btn-ghost" id="resetDataBtn">Reset All App Data</button>
+    <p class="disclaimer" style="text-align:center; margin-top:14px;">IronDaily is a beginner workout planning and tracking tool. It does not diagnose injuries or replace a qualified medical or fitness professional.</p>
+  `;
+  document.getElementById("saveSettingsBtn").addEventListener("click", ()=>{
+    const ns = Object.assign({}, s, {
+      name: document.getElementById("setName").value || "Athlete",
+      level: document.getElementById("setLevel").value,
+      goal: document.getElementById("setGoal").value,
+      days: parseInt(document.getElementById("setDays").value),
+      restDefault: parseInt(document.getElementById("setRest").value),
+      unit: document.getElementById("setUnit").value,
+      sound: document.getElementById("setSound").checked,
+      notifications: document.getElementById("setNotif").checked
+    });
+    saveSettings(ns); toast("Settings saved."); renderAll();
+  });
+  document.getElementById("resetDataBtn").addEventListener("click", ()=>{
+    if(confirm("This will permanently erase all workout data, progress, and settings on this device. Continue?")){
+      Object.values(K).forEach(k=>localStorage.removeItem(k));
+      session = null;
+      toast("All data cleared.");
+      switchView("home");
+    }
+  });
+}
+
+/* ============================================================
+   UTIL
+   ============================================================ */
+function escapeHTML(str){
+  return String(str).replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+getSettings(); // ensures defaults + startDate are written on first load
+renderAll();
+</script>
+</body>
+</html>
